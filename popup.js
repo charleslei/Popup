@@ -10,7 +10,7 @@
     function pp(config) {
         var prms = {
             origin: '',
-            evt: 'mouseover',
+            evt: '', //default: '';alternative: 'hover', 'click'
             parent: 'body',
             position: 'lb'
         };
@@ -29,18 +29,22 @@
             this.exitDir = '';
             me.findCount = 0;
 
-            origin.bind(evt, function(e) {
-                me.params.cursorPosition = {
-                    x: e.pageX,
-                    y: e.pageY
-                };
+            if(this.params.evt === 'hover'){
+                origin.bind('mouseover', function(e) {
+                    me.params.cursorPosition = { x: e.pageX, y: e.pageY };
+                    me._showWin();
+                });
+                origin.bind('mouseout', function(e) {
+                    me._hideWin();
+                });
+            }else if(this.params.evt === 'click'){
+                origin.bind(evt, function(e) {
+                    me.params.cursorPosition = { x: e.pageX, y: e.pageY };
+                    me._showWin();
+                });
+            } else{
                 me._showWin();
-            });
-            origin.bind('mouseout', function(e) {
-                me._hideWin();
-            });
-
-
+            }
         },
         _drawHTML: function() {
             var _html = '<div class="popup"></div>';
@@ -83,16 +87,19 @@
                 t: 'TOP',
                 r: 'RIGHT',
                 b: 'BOTTOM',
+                tm: 'TOPMIDDLE',
+                rm: 'RIGHTMIDDLE',
+                bm: 'BOTTOMMIDDLE',
+                lm: 'LEFTMIDDLE',
                 cur: 'CURSOR'
             }; //左上，右上，右下，左下
 
-            return me._getPositionExec(pts[po]);
+            return me._getRECTPositionExec(pts[po]);
         },
 
-        _getPositionExec: function(dir) { //获取弹窗的左上角；原则是弹窗不能压盖触发元素；//x>=0;y>=0
+        _getRECTPositionExec: function(dir) { //获取弹窗的左上角；原则是弹窗不能压盖触发元素；//x>=0;y>=0
 
-            var x = '',
-                y = '';
+            var x = '', y = '';
             var me = this;
             var origin = me.params.origin;
             var oW = origin.width();
@@ -103,39 +110,70 @@
             var pH = popupWin.height();
             var cp = me.params.cursorPosition;
             var adjustSuccess = true;
+            var delta = 0;
 
+            var POS = ['MIDDLE', 'CORNER', 'RECT'];
+            var po = '';
             switch (dir) {
                 case 'LEFT':
                     x = lt.left - pW;
                     y = lt.top;
+                    po = POS[2];
                     break;
                 case 'TOP':
                     x = lt.left;
                     y = lt.top - pH;
+                    po = POS[2];
                     break;
                 case 'RIGHT':
                     x = lt.left + oW;
                     y = lt.top;
+                    po = POS[2];
                     break;
                 case 'BOTTOM':
                     x = lt.left;
                     y = lt.top + oH;
+                    po = POS[2];
                     break;
                 case 'LEFTTOP':
                     x = lt.left - pW;
                     y = lt.top - pH;
+                    po = POS[1];
                     break;
                 case 'RIGHTTOP':
                     x = lt.left + oW;
                     y = lt.top;
+                    po = POS[1];
                     break;
                 case 'RIGHTBOTTOM':
                     x = lt.left + oW;
                     y = lt.top + oH;
+                    po = POS[1];
                     break;
                 case 'LEFTBOTTOM':
                     x = lt.left;
                     y = lt.top + oH;
+                    po = POS[1];
+                    break;
+                case 'TOPMIDDLE':
+                    x = lt.left - (pW - oW) / 2;
+                    y = lt.top - delta - pH;
+                    po = POS[0];
+                    break;
+                case 'RIGHTMIDDLE':
+                    x = lt.left + oW + delta;
+                    y = lt.top + (oH - pH) / 2;
+                    po = POS[0];
+                    break;
+                case 'BOTTOMMIDDLE':
+                    x = lt.left - (pW - oW) / 2;
+                    y = lt.top + delta + oH
+                    po = POS[0];
+                    break;
+                case 'LEFTMIDDLE':
+                    x = lt.left - delta - pW;
+                    y = lt.top - (pH - oH) / 2;
+                    po = POS[0];
                     break;
                 case 'CURSOR': //2px的缓冲；
                     x = cp.x + 2;
@@ -148,15 +186,19 @@
                     adjustSuccess = false;
                     break;
             }
-            
-            $.extend(me.rect, {
-                x: x,
-                y: y,
-                w: pW,
-                h: pH
-            });
+
+            $.extend(me.rect, { x: x, y: y, w: pW, h: pH });
+
             if (adjustSuccess) {
-                me._adjustPostion(me.rect, dir);
+            	    if(po === POS[0]) {
+                    me._adjustMiddlePostion(me.rect, dir);
+            	    } else if (po === POS[1]) {
+
+            	    } else if (po === POS[2]) {
+                    me._adjustRECTPostion(me.rect, dir);
+            	    } else {
+
+            	    }
                 x = me.rect.x;
                 y = me.rect.y;
             }
@@ -165,7 +207,44 @@
             return { x: x + 'px', y: y + 'px' };
         },
 
-        _adjustPostion: function(rect, dir) {
+        _adjustMiddlePostion: function(rect, dir){
+            var me = this;
+            //获取文档的宽度/高度；
+            var dH = $(document).height();
+            var dW = $(document).width();
+
+            var x = rect.x;
+            var y = rect.y;
+            var w = rect.w;
+            var h = rect.h;
+
+            if (w <= dW && h <= dH) { //高宽超过文档范围的暂时不做处理；
+                switch(dir){
+                    case 'TOPMIDDLE': //上侧是否超过父容器，赞不做处理；
+                        (x < 0) && (x = 0);
+                        (x + w> dW) && (x = dW - w);
+                        break;
+                    case 'RIGHTMIDDLE'://右侧是否超过父容器，赞不做处理；
+                        (y < 0) && (y = 0);
+                        (y + h > dH) && (y = dH - h);
+                        break;
+                    case 'BOTTOMMIDDLE'://下侧是否超过父容器，赞不做处理；
+                        (x < 0) && (x = 0);
+                        (x + w> dW) && (x = dW - w);
+                        break;
+                    case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
+                        (y < 0) && (y = 0);
+                        (y + h > dH) && (y = dH - h);
+                        break;
+                    default:
+                        ;
+                }
+                rect.x = x;
+                rect.y = y;
+            }
+        },
+
+        _adjustRECTPostion: function(rect, dir) {
             var me = this;
             //获取文档的宽度/高度；
             var dH = $(document).height();
@@ -182,25 +261,25 @@
                         //下侧超限，向上移；上侧最小值为0；
                         (y + h > dH) && (rect.y = dH - h);
                         //左侧超限，dir为right
-                        (x < 0) && (me._getPositionExec(me._oppoDirect(dir)));
+                        (x < 0) && (me._getRECTPositionExec(me._oppoDirect(dir)));
                         break;
                     case 'RIGHT':
                         //下侧超限，向上移；上侧最小值为0；
                         (y + h > dH) && (rect.y = dH - h);
                         //右侧超限，dir为left
-                        (x + w > dW) && (me._getPositionExec(me._oppoDirect(dir)));
+                        (x + w > dW) && (me._getRECTPositionExec(me._oppoDirect(dir)));
                         break;
                     case 'TOP':
                         //右侧超限，向左移；左侧最小值为0；
                         (x + w > dW) && (rect.x = dW - w);
                         //上部超限，dir为bottom
-                        (y < 0) && (me._getPositionExec(me._oppoDirect(dir)));
+                        (y < 0) && (me._getRECTPositionExec(me._oppoDirect(dir)));
                         break;
                     case 'BOTTOM':
                         //右侧超限，向左移；左侧最小值为0；
                         (x + w > dW) && (rect.x = dW - w);
                         //下部超限，dir为top
-                        (y + h > dH) && (me._getPositionExec(me._oppoDirect(dir)));
+                        (y + h > dH) && (me._getRECTPositionExec(me._oppoDirect(dir)));
                         break;
                     default:
                         ;
@@ -253,6 +332,3 @@
     $.fn.PopUp = popup;
 
 })(jQuery, window, document);
-
-$('#todopup').PopUp({position: 'r'});
-$('#todopup1').PopUp({position: 't'});
