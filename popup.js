@@ -12,7 +12,8 @@
             origin: '',
             evt: '', //default: '';alternative: 'hover', 'click'
             position: 'lb',
-			container: 'body'
+			container: 'body',
+			beforeShow: function(){}
         };
         $.extend(prms, config);
         this.params = prms;
@@ -52,7 +53,7 @@
         _drawHTML: function() {
             var _html = '<div class="popup"></div>';
             var obj = $(_html);
-            this.params.popupWin = obj;
+            this.params.dom = obj;
             $(this.params.container).append(obj);
         },
 
@@ -71,12 +72,12 @@
                 */
 
             var po = me._getPosition(me.params.position);
-            me.params.popupWin.css('left', po.x).css('top', po.y).show();
+            me.params.dom.css('left', po.x).css('top', po.y).show();
         },
 
         _hideWin: function() {
             var me = this;
-            me.params.popupWin.hide();
+            me.params.dom.hide();
         },
 
         _getPosition: function(po) {
@@ -108,7 +109,7 @@
             var oW = origin.width();
             var oH = origin.height();
             var lt = origin.offset();
-            var popupWin = me.params.popupWin;
+            var popupWin = me.params.dom;
             var pW = popupWin.width();
             var pH = popupWin.height();
             var cp = me.params.cursorPosition;
@@ -223,30 +224,66 @@
             var y = rect.y;
             var w = rect.w;
             var h = rect.h;
+			var x0;
+			var y0;
+			var anchorP = {};
 
             if (w <= cW && h <= cH) { //高宽超过文档范围的暂时不做处理；
                 switch(dir){
                     case 'TOPMIDDLE': //上侧是否超过父容器，赞不做处理；
-                        (x < cx) && (x = cx);
-                        (x + w> cx + cW) && (x = cx + cW - w + 1);
+						x0 = w / 2;
+						y0 = h;
+                        if(x < cx){
+							x = cx;
+							x0 = w / 2 - (x - rect.x);;
+						}
+                        if(x + w > cx + cW){
+							x = cx + cW - w + 1;
+							x0 = w / 2 + rect.x - x ;
+						}
                         break;
                     case 'RIGHTMIDDLE'://右侧是否超过父容器，赞不做处理；
-                        (y < cy) && (y = cy);
-                        (y + h > cy + cH) && (y = cy + cH - h + 1);
+						x0 = 0;
+						y0 = h / 2;
+						if(y < cy){
+							y = cy;
+							y0 = h / 2 - (y - rect.y);
+						}
+                        if(y + h > cy + cH){
+							y = cy + cH - h + 1;
+							y0 = h / 2 + rect.y - y;
+						}
                         break;
                     case 'BOTTOMMIDDLE'://下侧是否超过父容器，赞不做处理；
-                        (x < cx) && (x = cx);
-                        (x + w> cx + cW) && (x = cx + cW - w + 1);
+						x0 = w / 2;
+						y0 = 0;
+                        if(x < cx){
+							x = cx;
+							x0 = w / 2 - (x - rect.x);;
+						}
+                        if(x + w > cx + cW){
+							x = cx + cW - w + 1;
+							x0 = w / 2 + rect.x - x ;
+						}
                         break;
                     case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
-                        (y < cy) && (y = cy);
-                        (y + h > cy + cH) && (y = cy + cH - h + 1);
+						x0 = w;
+						y0 = h / 2;
+						if(y < cy){
+							y = cy;
+							y0 = h / 2 - (y - rect.y);
+						}
+                        if(y + h > cy + cH){
+							y = cy + cH - h + 1;
+							y0 = h / 2 + rect.y - y;
+						}
                         break;
                     default:
                         ;
                 }
                 rect.x = x;
                 rect.y = y;
+				me.params.beforeShow(me.params.dom, x0, y0);
             }
         },
 

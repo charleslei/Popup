@@ -33,8 +33,14 @@
 		//$('#todopup').PopUp({position: 'rm', evt: 'hover', container: '.content'});
 		//$('#todopup1').PopUp({position: 'lm', container: '.content'});
 		
-		//$('#todopup').PopUp({position: 't', container: '.content'});
-		$('#todopup1').PopUp({position: 't', container: '.content'});	
+		$('#todopup').PopUp({position: 'bm', container: '.content', beforeShow: function(dom, x, y){
+			dom.append($('<div style="background-color:red;width:10px;height:10px;position:absolute;left:' + x + 'px;top:' + (y-10) + 'px"></div>'));
+			//alert('x:' + x, '====y:' + y);
+		}});
+		$('#todopup1').PopUp({position: 'tm', container: '.content', beforeShow: function(dom, x, y){
+			dom.append($('<div style="background-color:red;width:10px;height:10px;position:absolute;left:' + x + 'px;top:' + (y) + 'px"></div>'));
+			//alert('x:' + x, '====y:' + y);
+		}});
 	})
 	</script>
 </body>
