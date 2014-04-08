@@ -4,7 +4,14 @@
 	<style type="text/css">
 		 body{overflow: hidden;}
 		.prt{width: 100%; background: white;}
-		.content{width: 990px;margin: 0 auto;border:1px solid #999;min-height: 125px;margin-top: 70px;}
+		.content{
+			width: 990px;
+			margin: 0 auto;
+			border:1px solid #999;
+			min-height: 125px;
+			margin-top: 70px;
+			height:220px;
+		}
 	</style>
 	<link rel="stylesheet" type="text/css" href="./popup.css">
 </head>
@@ -12,10 +19,10 @@
 	<div class="prt">
 		<div class='content'>
 			<span>这是一个历史性的时刻，</span>
-			<a id="todopup" href='javascript:;' >this is a test</a>
+			<a id="todopup" href='javascript:;'  style='border: 1px solid red'>this is a test</a>
 			<span>连接了两国人民。两国有相同的语言，克里米亚绝大多数是俄罗斯族，他们需要加入俄罗斯。这是克里米亚人的权利，我们尊重他们的权利，他们拥有着和俄罗斯一样的权利和地位。克里米亚现在的军事局势，要求我们必须答应他们的要求，这是公投的结果，形成这样的请求是公开公正的。
 大家应该知道克里米亚对俄罗斯意味着什么。克里米亚与俄罗斯太相像，有许多不同种族的人在那里居住。克里米亚公投符合国际标准。克里米亚是黑海舰队的家乡。克里米亚是俄罗斯神圣的领土。我发誓保护在克里米亚的鞑靼人。俄罗斯、乌克兰和鞑靼语是克里米亚的官方语言。今天的决定具有历史重要意义，如果你了解历史，就完全可以理解克里米亚人民的决定。我们不能将克里米亚人弃之不顾，那样的话我们就成了叛徒。我明白为什么乌克兰人希望改变，他们厌倦了政治和权力。我们知道乌克兰没有执行政府，现在的乌克兰政府在激进份子的控制下。乌克兰的俄罗斯族人已经受够了乌克兰政府。</span>
-			<a id="todopup1" href='javascript:;' >this is a test</a>
+			<a id="todopup1" href='javascript:;' style='border: 1px solid red'>this is a test</a>
 		</div>
 	</div>
 	<script type="text/javascript" src="./jquery-2.1.0.min.js"></script>
@@ -23,8 +30,11 @@
 	<script type="text/javascript">
 
 	$(function(){
-		$('#todopup').PopUp({position: 'tm', evt: 'hover'});
-		$('#todopup1').PopUp({position: 'lm'});		
+		//$('#todopup').PopUp({position: 'rm', evt: 'hover', container: '.content'});
+		//$('#todopup1').PopUp({position: 'lm', container: '.content'});
+		
+		//$('#todopup').PopUp({position: 't', container: '.content'});
+		$('#todopup1').PopUp({position: 't', container: '.content'});	
 	})
 	</script>
 </body>

@@ -11,8 +11,8 @@
         var prms = {
             origin: '',
             evt: '', //default: '';alternative: 'hover', 'click'
-            parent: 'body',
-            position: 'lb'
+            position: 'lb',
+			container: 'body'
         };
         $.extend(prms, config);
         this.params = prms;
@@ -45,12 +45,15 @@
             } else{
                 me._showWin();
             }
+			
+			//设置container的样式；
+			//$(me.params.container).css('position', 'relative');
         },
         _drawHTML: function() {
             var _html = '<div class="popup"></div>';
             var obj = $(_html);
             this.params.popupWin = obj;
-            $(this.params.parent).append(obj);
+            $(this.params.container).append(obj);
         },
 
         //show popup window;
@@ -94,10 +97,10 @@
                 cur: 'CURSOR'
             }; //左上，右上，右下，左下
 
-            return me._getRECTPositionExec(pts[po]);
+            return me._getPositionExec(pts[po]);
         },
 
-        _getRECTPositionExec: function(dir) { //获取弹窗的左上角；原则是弹窗不能压盖触发元素；//x>=0;y>=0
+        _getPositionExec: function(dir) { //获取弹窗的左上角；原则是弹窗不能压盖触发元素；//x>=0;y>=0
 
             var x = '', y = '';
             var me = this;
@@ -209,32 +212,35 @@
 
         _adjustMiddlePostion: function(rect, dir){
             var me = this;
-            //获取文档的宽度/高度；
-            var dH = $(document).height();
-            var dW = $(document).width();
-
+			var ctn = me.params.container;
+            var cH = $(ctn).height();
+            var cW = $(ctn).width();
+			var cOffset = $(ctn).offset();
+			var cx = cOffset.left;
+			var cy = cOffset.top;
+			
             var x = rect.x;
             var y = rect.y;
             var w = rect.w;
             var h = rect.h;
 
-            if (w <= dW && h <= dH) { //高宽超过文档范围的暂时不做处理；
+            if (w <= cW && h <= cH) { //高宽超过文档范围的暂时不做处理；
                 switch(dir){
                     case 'TOPMIDDLE': //上侧是否超过父容器，赞不做处理；
-                        (x < 0) && (x = 0);
-                        (x + w> dW) && (x = dW - w);
+                        (x < cx) && (x = cx);
+                        (x + w> cx + cW) && (x = cx + cW - w + 1);
                         break;
                     case 'RIGHTMIDDLE'://右侧是否超过父容器，赞不做处理；
-                        (y < 0) && (y = 0);
-                        (y + h > dH) && (y = dH - h);
+                        (y < cy) && (y = cy);
+                        (y + h > cy + cH) && (y = cy + cH - h + 1);
                         break;
                     case 'BOTTOMMIDDLE'://下侧是否超过父容器，赞不做处理；
-                        (x < 0) && (x = 0);
-                        (x + w> dW) && (x = dW - w);
+                        (x < cx) && (x = cx);
+                        (x + w> cx + cW) && (x = cx + cW - w + 1);
                         break;
                     case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
-                        (y < 0) && (y = 0);
-                        (y + h > dH) && (y = dH - h);
+                        (y < cy) && (y = cy);
+                        (y + h > cy + cH) && (y = cy + cH - h + 1);
                         break;
                     default:
                         ;
@@ -246,40 +252,43 @@
 
         _adjustRECTPostion: function(rect, dir) {
             var me = this;
-            //获取文档的宽度/高度；
-            var dH = $(document).height();
-            var dW = $(document).width();
+			var ctn = me.params.container;
+            var cH = $(ctn).height();
+            var cW = $(ctn).width();
+			var cOffset = $(ctn).offset();
+			var cx = cOffset.left;
+			var cy = cOffset.top;
 
             var x = rect.x;
             var y = rect.y;
             var w = rect.w;
             var h = rect.h;
 
-            if (w <= dW && h <= dH) { //高宽超过文档范围的暂时不做处理；
+            if (w <= cW && h <= cH) { //高宽超过文档范围的暂时不做处理；
                 switch (dir) {
                     case 'LEFT':
                         //下侧超限，向上移；上侧最小值为0；
-                        (y + h > dH) && (rect.y = dH - h);
+                        (y + h > cy + cH) && (rect.y = cy + cH - h + 1);
                         //左侧超限，dir为right
-                        (x < 0) && (me._getRECTPositionExec(me._oppoDirect(dir)));
+                        (x < cx) && (me._getPositionExec(me._oppoDirect(dir)));
                         break;
                     case 'RIGHT':
                         //下侧超限，向上移；上侧最小值为0；
-                        (y + h > dH) && (rect.y = dH - h);
+                        (y + h > cy + cH) && (rect.y = cy + cH - h + 1);
                         //右侧超限，dir为left
-                        (x + w > dW) && (me._getRECTPositionExec(me._oppoDirect(dir)));
+                        (x + w > cW) && (me._getPositionExec(me._oppoDirect(dir)));
                         break;
                     case 'TOP':
                         //右侧超限，向左移；左侧最小值为0；
-                        (x + w > dW) && (rect.x = dW - w);
+                        (x + w > cx + cW) && (rect.x = cx + cW - w + 1);
                         //上部超限，dir为bottom
-                        (y < 0) && (me._getRECTPositionExec(me._oppoDirect(dir)));
+                        (y < cy) && (me._getPositionExec(me._oppoDirect(dir)));
                         break;
                     case 'BOTTOM':
                         //右侧超限，向左移；左侧最小值为0；
-                        (x + w > dW) && (rect.x = dW - w);
+                        (x + w > cx + cW) && (rect.x = cx + cW - w + 1);
                         //下部超限，dir为top
-                        (y + h > dH) && (me._getRECTPositionExec(me._oppoDirect(dir)));
+                        (y + h > cH) && (me._getPositionExec(me._oppoDirect(dir)));
                         break;
                     default:
                         ;
