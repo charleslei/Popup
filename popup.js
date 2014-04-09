@@ -13,7 +13,8 @@
             evt: '', //default: '';alternative: 'hover', 'click'
             position: 'lb',
 			container: 'body',
-			beforeShow: function(){}
+			beforeShow: function(){},
+			delta: 0
         };
         $.extend(prms, config);
         this.params = prms;
@@ -31,15 +32,15 @@
             me.findCount = 0;
 
             if(this.params.evt === 'hover'){
-                origin.bind('mouseover', function(e) {
+                origin.bind('mouseover.popup', function(e) {
                     me.params.cursorPosition = { x: e.pageX, y: e.pageY };
                     me._showWin();
                 });
-                origin.bind('mouseout', function(e) {
+                origin.bind('mouseout.popup', function(e) {
                     me._hideWin();
                 });
             }else if(this.params.evt === 'click'){
-                origin.bind(evt, function(e) {
+                origin.bind(evt + '.popup', function(e) {
                     me.params.cursorPosition = { x: e.pageX, y: e.pageY };
                     me._showWin();
                 });
@@ -49,6 +50,10 @@
 			
 			//设置container的样式；
 			//$(me.params.container).css('position', 'relative');
+            //注册浏览器缩放事件
+            $(window).bind('resize.popup ', function(e){
+                me._showWin();
+            })
         },
         _drawHTML: function() {
             var _html = '<div class="popup"></div>';
@@ -111,10 +116,10 @@
             var lt = origin.offset();
             var popupWin = me.params.dom;
             var pW = popupWin.width();
-            var pH = popupWin.height();
+            var pH = popupWin.height();0
             var cp = me.params.cursorPosition;
             var adjustSuccess = true;
-            var delta = 0;
+            var delta = me.params.delta;
 
             var POS = ['MIDDLE', 'CORNER', 'RECT'];
             var po = '';
@@ -283,8 +288,29 @@
                 }
                 rect.x = x;
                 rect.y = y;
-				me.params.beforeShow(me.params.dom, x0, y0);
+            }else{
+                switch(dir){
+                    case 'TOPMIDDLE': //上侧是否超过父容器，赞不做处理；
+						x0 = w / 2;
+						y0 = h;
+                        break;
+                    case 'RIGHTMIDDLE'://右侧是否超过父容器，赞不做处理；
+						x0 = 0;
+						y0 = h / 2;
+                        break;
+                    case 'BOTTOMMIDDLE'://下侧是否超过父容器，赞不做处理；
+						x0 = w / 2;
+						y0 = 0;
+                        break;
+                    case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
+						x0 = w;
+						y0 = h / 2;
+                        break;
+                    default:
+                        ;
+                }
             }
+            me.params.beforeShow(me.params.dom, x0, y0);
         },
 
         _adjustRECTPostion: function(rect, dir) {
@@ -301,37 +327,106 @@
             var w = rect.w;
             var h = rect.h;
 
+            var origin = me.params.origin;
+            var oW = origin.width();
+            var oH = origin.height();
+            var oOffset = origin.offset();
+            var ox = oOffset.left;
+            var oy = oOffset.top;
+
+            var x0;
+            var y0;
+            var delta = me.params.delta;
+
             if (w <= cW && h <= cH) { //高宽超过文档范围的暂时不做处理；
                 switch (dir) {
                     case 'LEFT':
                         //下侧超限，向上移；上侧最小值为0；
-                        (y + h > cy + cH) && (rect.y = cy + cH - h + 1);
+                        x0 = w;
+                        y0 = oH / 2;
+                        if(y + h > cy + cH){
+                            rect.y = cy + cH - h + 1;
+                            y0 = oH / 2 + y + h - cy - cH;
+                        }
                         //左侧超限，dir为right
-                        (x < cx) && (me._getPositionExec(me._oppoDirect(dir)));
+                        if(x < cx){
+                            me._getPositionExec(me._oppoDirect(dir));
+                            return;
+                        }
                         break;
                     case 'RIGHT':
                         //下侧超限，向上移；上侧最小值为0；
-                        (y + h > cy + cH) && (rect.y = cy + cH - h + 1);
+                        x0 = 0;
+                        y0 = oH / 2;
+                        if(y + h > cy + cH){
+                            rect.y = cy + cH - h + 1;
+                            y0 = oH / 2 + y + h - cy - cH;
+                        }
                         //右侧超限，dir为left
-                        (x + w > cW) && (me._getPositionExec(me._oppoDirect(dir)));
+                        if(x + w > cW){
+                            me._getPositionExec(me._oppoDirect(dir));
+                            return;//递归时会引起回调函数参数错误；
+                        }
                         break;
                     case 'TOP':
                         //右侧超限，向左移；左侧最小值为0；
-                        (x + w > cx + cW) && (rect.x = cx + cW - w + 1);
+                        x0 = oW / 2;
+                        y0 = h;
+                        if(x + w > cx + cW){
+                            rect.x = cx + cW - w + 1;
+                            x0 = oW / 2 + x + w - cx - cW;
+                        }
                         //上部超限，dir为bottom
-                        (y < cy) && (me._getPositionExec(me._oppoDirect(dir)));
+                        if(y < cy){
+                            me._getPositionExec(me._oppoDirect(dir));
+                            return;
+                        }
                         break;
                     case 'BOTTOM':
+                        x0 = oW / 2;
+                        y0 = 0;
                         //右侧超限，向左移；左侧最小值为0；
-                        (x + w > cx + cW) && (rect.x = cx + cW - w + 1);
+                        if(x + w > cx + cW){
+                            rect.x = cx + cW - w + 1;
+                            x0 = oW / 2 + x + w - cx - cW;
+                        }
                         //下部超限，dir为top
-                        (y + h > cH) && (me._getPositionExec(me._oppoDirect(dir)));
+                        if(y + h > cH){
+                            me._getPositionExec(me._oppoDirect(dir));
+                            return;
+                        }
                         break;
                     default:
                         ;
                 }
 
+            }else{
+                switch (dir) {
+                    case 'LEFT':
+                        //下侧超限，向上移；上侧最小值为0；
+                        x0 = w;
+                        y0 = oH / 2;
+                        break;
+                    case 'RIGHT':
+                        //下侧超限，向上移；上侧最小值为0；
+                        x0 = 0;
+                        y0 = oH / 2;
+                        break;
+                    case 'TOP':
+                        //右侧超限，向左移；左侧最小值为0；
+                        x0 = oW / 2;
+                        y0 = h;
+                        break;
+                    case 'BOTTOM':
+                        x0 = oW / 2;
+                        y0 = 0;
+                        //右侧超限，向左移；左侧最小值为0；
+                        break;
+                    default:
+                        ;
+                }
             }
+            me.params.beforeShow(me.params.dom, x0, y0);
         },
 
 
