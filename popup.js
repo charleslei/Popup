@@ -12,9 +12,10 @@
             origin: '',
             evt: '', //default: '';alternative: 'hover', 'click'
             position: 'lb',
-			container: 'body',
-			beforeShow: function(){},
-			delta: 0
+            container: 'body',
+            beforeShow: function() {},
+            getContent: function(){},
+            delta: 0
         };
         $.extend(prms, config);
         this.params = prms;
@@ -47,9 +48,9 @@
             } else{
                 me._showWin();
             }
-			
-			//设置container的样式；
-			//$(me.params.container).css('position', 'relative');
+            
+            //设置container的样式；
+            //$(me.params.container).css('position', 'relative');
             //注册浏览器缩放事件
             $(window).bind('resize.popup ', function(e){
                 me._showWin();
@@ -58,6 +59,8 @@
         _drawHTML: function() {
             var _html = '<div class="popup"></div>';
             var obj = $(_html);
+            var con = me.params.getContent();
+            obj.append(con);
             this.params.dom = obj;
             $(this.params.container).append(obj);
         },
@@ -199,15 +202,13 @@
             $.extend(me.rect, { x: x, y: y, w: pW, h: pH });
 
             if (adjustSuccess) {
-            	    if(po === POS[0]) {
-                    me._adjustMiddlePostion(me.rect, dir);
-            	    } else if (po === POS[1]) {
-
-            	    } else if (po === POS[2]) {
-                    me._adjustRECTPostion(me.rect, dir);
-            	    } else {
-
-            	    }
+                    if(po === POS[0]) {
+                        me._adjustMiddlePostion(me.rect, dir);
+                    } else if (po === POS[1]) {
+                        //TODO:
+                    } else if (po === POS[2]) {
+                        me._adjustRECTPostion(me.rect, dir);
+                    }
                 x = me.rect.x;
                 y = me.rect.y;
             }
@@ -218,70 +219,70 @@
 
         _adjustMiddlePostion: function(rect, dir){
             var me = this;
-			var ctn = me.params.container;
+            var ctn = me.params.container;
             var cH = $(ctn).height();
             var cW = $(ctn).width();
-			var cOffset = $(ctn).offset();
-			var cx = cOffset.left;
-			var cy = cOffset.top;
-			
+            var cOffset = $(ctn).offset();
+            var cx = cOffset.left;
+            var cy = cOffset.top;
+            
             var x = rect.x;
             var y = rect.y;
             var w = rect.w;
             var h = rect.h;
-			var x0;
-			var y0;
-			var anchorP = {};
+            var x0;
+            var y0;
+            var anchorP = {};
 
             if (w <= cW && h <= cH) { //高宽超过文档范围的暂时不做处理；
                 switch(dir){
                     case 'TOPMIDDLE': //上侧是否超过父容器，赞不做处理；
-						x0 = w / 2;
-						y0 = h;
+                        x0 = w / 2;
+                        y0 = h;
                         if(x < cx){
-							x = cx;
-							x0 = w / 2 - (x - rect.x);;
-						}
+                            x = cx;
+                            x0 = w / 2 - (x - rect.x);;
+                        }
                         if(x + w > cx + cW){
-							x = cx + cW - w + 1;
-							x0 = w / 2 + rect.x - x ;
-						}
+                            x = cx + cW - w + 1;
+                            x0 = w / 2 + rect.x - x ;
+                        }
                         break;
                     case 'RIGHTMIDDLE'://右侧是否超过父容器，赞不做处理；
-						x0 = 0;
-						y0 = h / 2;
-						if(y < cy){
-							y = cy;
-							y0 = h / 2 - (y - rect.y);
-						}
+                        x0 = 0;
+                        y0 = h / 2;
+                        if(y < cy){
+                            y = cy;
+                            y0 = h / 2 - (y - rect.y);
+                        }
                         if(y + h > cy + cH){
-							y = cy + cH - h + 1;
-							y0 = h / 2 + rect.y - y;
-						}
+                            y = cy + cH - h + 1;
+                            y0 = h / 2 + rect.y - y;
+                        }
                         break;
                     case 'BOTTOMMIDDLE'://下侧是否超过父容器，赞不做处理；
-						x0 = w / 2;
-						y0 = 0;
+                        x0 = w / 2;
+                        y0 = 0;
                         if(x < cx){
-							x = cx;
-							x0 = w / 2 - (x - rect.x);;
-						}
+                            x = cx;
+                            x0 = w / 2 - (x - rect.x);;
+                        }
                         if(x + w > cx + cW){
-							x = cx + cW - w + 1;
-							x0 = w / 2 + rect.x - x ;
-						}
+                            x = cx + cW - w + 1;
+                            x0 = w / 2 + rect.x - x ;
+                        }
                         break;
                     case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
-						x0 = w;
-						y0 = h / 2;
-						if(y < cy){
-							y = cy;
-							y0 = h / 2 - (y - rect.y);
-						}
+                        x0 = w;
+                        y0 = h / 2;
+                        if(y < cy){
+                            y = cy;
+                            y0 = h / 2 - (y - rect.y);
+                        }
                         if(y + h > cy + cH){
-							y = cy + cH - h + 1;
-							y0 = h / 2 + rect.y - y;
-						}
+                            y = cy + cH - h + 1;
+                            y0 = h / 2 + rect.y - y;
+                        }
                         break;
                     default:
                         ;
@@ -291,20 +292,20 @@
             }else{
                 switch(dir){
                     case 'TOPMIDDLE': //上侧是否超过父容器，赞不做处理；
-						x0 = w / 2;
-						y0 = h;
+                        x0 = w / 2;
+                        y0 = h;
                         break;
                     case 'RIGHTMIDDLE'://右侧是否超过父容器，赞不做处理；
-						x0 = 0;
-						y0 = h / 2;
+                        x0 = 0;
+                        y0 = h / 2;
                         break;
                     case 'BOTTOMMIDDLE'://下侧是否超过父容器，赞不做处理；
-						x0 = w / 2;
-						y0 = 0;
+                        x0 = w / 2;
+                        y0 = 0;
                         break;
                     case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
-						x0 = w;
-						y0 = h / 2;
+                        x0 = w;
+                        y0 = h / 2;
                         break;
                     default:
                         ;
@@ -315,12 +316,12 @@
 
         _adjustRECTPostion: function(rect, dir) {
             var me = this;
-			var ctn = me.params.container;
+            var ctn = me.params.container;
             var cH = $(ctn).height();
             var cW = $(ctn).width();
-			var cOffset = $(ctn).offset();
-			var cx = cOffset.left;
-			var cy = cOffset.top;
+            var cOffset = $(ctn).offset();
+            var cx = cOffset.left;
+            var cy = cOffset.top;
 
             var x = rect.x;
             var y = rect.y;
@@ -399,7 +400,6 @@
                     default:
                         ;
                 }
-
             }else{
                 switch (dir) {
                     case 'LEFT':
@@ -429,7 +429,6 @@
             me.params.beforeShow(me.params.dom, x0, y0);
         },
 
-
         _oppoDirect: function(dir) {
             var me = this;
             var dirsDic = {
@@ -454,7 +453,7 @@
             var dirs = ['RIGHT', 'BOTTOM', 'LEFT', 'TOP'];
             me.exitDir += " " + current;
             me.findCount += 1;
-            //realDir = this.exitDir.indexOf(oppo) > 0 ? me._nextDirect(oppo) : oppo{//已经存在的话，从dirs里面找， 否则直接返回对面放心的；
+            //realDir = this.exitDir.indexOf(oppo) > 0 ? me._nextDirect(oppo) : oppo{//已经存在的话，从dirs里面找， 否则直接返回对面方向的；
             var idx = dirs.indexOf(current) + 1;
             (idx === dirs.length) && (idx = 0);
             realDir = dirs[idx];
