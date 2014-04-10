@@ -59,10 +59,10 @@
         _drawHTML: function() {
             var _html = '<div class="popup"></div>';
             var obj = $(_html);
-            var con = me.params.getContent();
-            obj.append(con);
             this.params.dom = obj;
-            $(this.params.container).append(obj);
+            $(this.params.container).append(obj);            
+            var con = this.params.getContent();
+            obj.append(con);
         },
 
         //show popup window;
@@ -128,23 +128,23 @@
             var po = '';
             switch (dir) {
                 case 'LEFT':
-                    x = lt.left - pW;
+                    x = lt.left - pW - delta;
                     y = lt.top;
                     po = POS[2];
                     break;
                 case 'TOP':
                     x = lt.left;
-                    y = lt.top - pH;
+                    y = lt.top - pH - delta;
                     po = POS[2];
                     break;
                 case 'RIGHT':
-                    x = lt.left + oW;
+                    x = lt.left + oW + delta;
                     y = lt.top;
                     po = POS[2];
                     break;
                 case 'BOTTOM':
                     x = lt.left;
-                    y = lt.top + oH;
+                    y = lt.top + oH + delta;
                     po = POS[2];
                     break;
                 case 'LEFTTOP':
@@ -339,15 +339,20 @@
             var y0;
             var delta = me.params.delta;
 
+            //判断悬浮框和元素的高宽；来取中间点的坐标
+            var deltaX = w - oW >= 0 ? true : false;
+            var deltaY = h - oH >= 0 ? true : false;
+
             if (w <= cW && h <= cH) { //高宽超过文档范围的暂时不做处理；
                 switch (dir) {
                     case 'LEFT':
                         //下侧超限，向上移；上侧最小值为0；
                         x0 = w;
-                        y0 = oH / 2;
+                        y0 = deltaY ? oH / 2 : h / 2;
+
                         if(y + h > cy + cH){
                             rect.y = cy + cH - h + 1;
-                            y0 = oH / 2 + y + h - cy - cH;
+                            y0 = deltaY ? oH / 2 + y + h - cy - cH : h / 2;
                         }
                         //左侧超限，dir为right
                         if(x < cx){
@@ -358,24 +363,24 @@
                     case 'RIGHT':
                         //下侧超限，向上移；上侧最小值为0；
                         x0 = 0;
-                        y0 = oH / 2;
+                        y0 = deltaY ? oH / 2 : h / 2;
                         if(y + h > cy + cH){
                             rect.y = cy + cH - h + 1;
-                            y0 = oH / 2 + y + h - cy - cH;
+                            y0 = deltaY ? oH / 2 + y + h - cy - cH : h / 2;
                         }
                         //右侧超限，dir为left
-                        if(x + w > cW){
+                        if(x + w > cx + cW){
                             me._getPositionExec(me._oppoDirect(dir));
                             return;//递归时会引起回调函数参数错误；
                         }
                         break;
                     case 'TOP':
                         //右侧超限，向左移；左侧最小值为0；
-                        x0 = oW / 2;
+                        x0 = deltaX ? oW / 2 : w / 2;
                         y0 = h;
                         if(x + w > cx + cW){
                             rect.x = cx + cW - w + 1;
-                            x0 = oW / 2 + x + w - cx - cW;
+                            x0 = deltaX ? oW / 2 + x + w - cx - cW : w / 2;
                         }
                         //上部超限，dir为bottom
                         if(y < cy){
@@ -384,15 +389,15 @@
                         }
                         break;
                     case 'BOTTOM':
-                        x0 = oW / 2;
+                        x0 = deltaX ? oW / 2 : w / 2;
                         y0 = 0;
                         //右侧超限，向左移；左侧最小值为0；
                         if(x + w > cx + cW){
                             rect.x = cx + cW - w + 1;
-                            x0 = oW / 2 + x + w - cx - cW;
+                            x0 = deltaX ? oW / 2 + x + w - cx - cW : w / 2;
                         }
                         //下部超限，dir为top
-                        if(y + h > cH){
+                        if(y + h > cH + cy){
                             me._getPositionExec(me._oppoDirect(dir));
                             return;
                         }
