@@ -32,7 +32,9 @@
     <script type="text/javascript">
 
     $(function(){
-        //$('#todopup').PopUp({position: 'l', container: '.content'});
+            $('a').PopUp({evt: 'click', defEle: ':first', position: 'l', container: '.content', getContent: function(){
+                return $('<div>this is a tttttt!</div>')
+                }});
         $('#todopup1').PopUp({evt: 'hover', position: 'r', container: '.content', delta: 10, 
         	beforeShow: function(dom, x, y){
             	    //dom.append($('<div style="background-color:red;width:10px;height:10px;position:absolute;left:' + (x-5) + 'px;top:' + (y-5) + 'px"></div>'));

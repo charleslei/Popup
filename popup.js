@@ -1,21 +1,21 @@
 (function($, win, doc) {
     function popup(config) {
-        var me = $(this);
-        var cfg = { origin: me};
-        //var cfg = $({}, config); 这是错误的用法；
+        var $this = $(this);
+        var cfg = {eles: $this};
         $.extend(cfg, config);
         new pp(cfg);
     }
 
     function pp(config) {
         var prms = {
-            origin: '',
+            eles: '',
             evt: '', //default: '';alternative: 'hover', 'click'
             position: 'lb',
             container: 'body',
             beforeShow: function() {},
             getContent: function(){},
-            delta: 0
+            delta: 0,
+            defEle: '' //默认显示弹窗的元素；只在未设置鼠标交互事件时启用；
         };
         $.extend(prms, config);
         this.params = prms;
@@ -25,7 +25,7 @@
     pp.prototype = {
         _init: function() {
             var me = this;
-            var origin = this.params.origin;
+            var eles = this.params.eles;
             var evt = this.params.evt;
             this._drawHTML();
             me.rect = {};
@@ -33,19 +33,24 @@
             me.findCount = 0;
 
             if(this.params.evt === 'hover'){
-                origin.bind('mouseover.popup', function(e) {
+                eles.bind('mouseover.popup', function(e) {
                     me.params.cursorPosition = { x: e.pageX, y: e.pageY };
+                    me.params.origin = $(this);
                     me._showWin();
                 });
-                origin.bind('mouseout.popup', function(e) {
+                eles.bind('mouseout.popup', function(e) {
                     me._hideWin();
                 });
             }else if(this.params.evt === 'click'){
-                origin.bind(evt + '.popup', function(e) {
+                eles.bind(evt + '.popup', function(e) {
+                    me.params.origin = $(this);
                     me.params.cursorPosition = { x: e.pageX, y: e.pageY };
                     me._showWin();
                 });
-            } else{
+            }
+            var ele = me.params.eles.filter(me.params.defEle);
+            if(ele.length){
+                me.params.origin = ele;
                 me._showWin();
             }
             
