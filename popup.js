@@ -109,8 +109,8 @@
             return me._getPositionExec(pts[po]);
         },
 
-        _getPositionExec: function(dir) { //获取弹窗的左上角；原则是弹窗不能压盖触发元素；//x>=0;y>=0
-
+        _getPositionExec: function(dir) {
+            //获取弹窗的左上角；原则是弹窗不能压盖触发元素；//x>=0;y>=0
             var x = '', y = '';
             var me = this;
             var origin = me.params.origin;
@@ -203,11 +203,11 @@
 
             if (adjustSuccess) {
                     if(po === POS[0]) {
-                        me._adjustMiddlePostion(me.rect, dir);
+                        me._adjustMiddlePostion(me.rect, dir, po);
                     } else if (po === POS[1]) {
                         //TODO:
                     } else if (po === POS[2]) {
-                        me._adjustRECTPostion(me.rect, dir);
+                        me._adjustRECTPostion(me.rect, dir, po);
                     }
                 x = me.rect.x;
                 y = me.rect.y;
@@ -236,16 +236,16 @@
 
             if (w <= cW && h <= cH) { //高宽超过文档范围的暂时不做处理；
                 switch(dir){
-                    case 'TOPMIDDLE': //上侧是否超过父容器，赞不做处理；
-                        x0 = w / 2;
-                        y0 = h;
-                        if(x < cx){
-                            x = cx;
-                            x0 = w / 2 - (x - rect.x);;
+                    case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
+                        x0 = w;
+                        y0 = h / 2;
+                        if(y < cy){
+                            y = cy;
+                            y0 = h / 2 - (y - rect.y);
                         }
-                        if(x + w > cx + cW){
-                            x = cx + cW - w + 1;
-                            x0 = w / 2 + rect.x - x ;
+                        if(y + h > cy + cH){
+                            y = cy + cH - h + 1;
+                            y0 = h / 2 + rect.y - y;
                         }
                         break;
                     case 'RIGHTMIDDLE'://右侧是否超过父容器，赞不做处理；
@@ -260,6 +260,18 @@
                             y0 = h / 2 + rect.y - y;
                         }
                         break;
+                    case 'TOPMIDDLE': //上侧是否超过父容器，赞不做处理；
+                        x0 = w / 2;
+                        y0 = h;
+                        if(x < cx){
+                            x = cx;
+                            x0 = w / 2 - (x - rect.x);;
+                        }
+                        if(x + w > cx + cW){
+                            x = cx + cW - w + 1;
+                            x0 = w / 2 + rect.x - x ;
+                        }
+                        break;
                     case 'BOTTOMMIDDLE'://下侧是否超过父容器，赞不做处理；
                         x0 = w / 2;
                         y0 = 0;
@@ -270,18 +282,6 @@
                         if(x + w > cx + cW){
                             x = cx + cW - w + 1;
                             x0 = w / 2 + rect.x - x ;
-                        }
-                        break;
-                    case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
-                        x0 = w;
-                        y0 = h / 2;
-                        if(y < cy){
-                            y = cy;
-                            y0 = h / 2 - (y - rect.y);
-                        }
-                        if(y + h > cy + cH){
-                            y = cy + cH - h + 1;
-                            y0 = h / 2 + rect.y - y;
                         }
                         break;
                     default:
@@ -291,21 +291,21 @@
                 rect.y = y;
             }else{
                 switch(dir){
-                    case 'TOPMIDDLE': //上侧是否超过父容器，赞不做处理；
-                        x0 = w / 2;
-                        y0 = h;
+                    case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
+                        x0 = w;
+                        y0 = h / 2;
                         break;
                     case 'RIGHTMIDDLE'://右侧是否超过父容器，赞不做处理；
                         x0 = 0;
                         y0 = h / 2;
                         break;
+                    case 'TOPMIDDLE': //上侧是否超过父容器，赞不做处理；
+                        x0 = w / 2;
+                        y0 = h;
+                        break;
                     case 'BOTTOMMIDDLE'://下侧是否超过父容器，赞不做处理；
                         x0 = w / 2;
                         y0 = 0;
-                        break;
-                    case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
-                        x0 = w;
-                        y0 = h / 2;
                         break;
                     default:
                         ;
@@ -406,26 +406,22 @@
                         ;
                 }
             }else{
-                switch (dir) {
+                switch (dir) {//获取悬浮窗相对与元素之间的中心点；
                     case 'LEFT':
-                        //下侧超限，向上移；上侧最小值为0；
                         x0 = w;
                         y0 = oH / 2;
                         break;
                     case 'RIGHT':
-                        //下侧超限，向上移；上侧最小值为0；
                         x0 = 0;
                         y0 = oH / 2;
                         break;
                     case 'TOP':
-                        //右侧超限，向左移；左侧最小值为0；
                         x0 = oW / 2;
                         y0 = h;
                         break;
                     case 'BOTTOM':
                         x0 = oW / 2;
                         y0 = 0;
-                        //右侧超限，向左移；左侧最小值为0；
                         break;
                     default:
                         ;
