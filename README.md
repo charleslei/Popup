@@ -31,3 +31,8 @@ Popup
 ##googlecode上有类似的控件
 
 http://closure-library.googlecode.com/svn/trunk/closure/goog/demos/hovercard.html
+
+
+##需要注意的地方：
+悬浮窗内的包装元素需要设置固定高宽；否则IE6/7下会出现位置计算不准确的情况；
+或者设置禁止自动折行‘white-space:nowrap;’

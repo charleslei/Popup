@@ -10,7 +10,7 @@
         var prms = {
             eles: '',
             evt: '', //default: '';alternative: 'hover', 'click'
-            position: 'lb',
+            dir: 'lb',
             container: 'body',
             beforeShow: function() {},
             getContent: function(){},
@@ -58,7 +58,9 @@
             //$(me.params.container).css('position', 'relative');
             //注册浏览器缩放事件
             $(window).bind('resize.popup ', function(e){
-                me._showWin();
+				if(me.params.origin && me.params.origin.length){
+					me._showWin();
+				}
             })
         },
         _drawHTML: function() {
@@ -66,8 +68,8 @@
             var obj = $(_html);
             this.params.dom = obj;
             $(this.params.container).append(obj);            
-            var con = this.params.getContent();
-            obj.append(con);
+            var ctn = this.params.getContent();
+            obj.append(ctn);
         },
 
         //show popup window;
@@ -84,7 +86,7 @@
                     e：mouse；弹窗左上角为鼠标位置；左右位置可自适应；
                 */
 
-            var po = me._getPosition(me.params.position);
+            var po = me._getPosition(me.params.dir);
             me.params.dom.css('left', po.x).css('top', po.y).show();
         },
 
