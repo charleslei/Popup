@@ -28,6 +28,8 @@ Popup
 
 4、合并避让方式，消除冗余代码；
 
+5、悬浮窗没有脱离文档流，在父容器中有一个显示区域；
+
 ##googlecode上有类似的控件
 
 http://closure-library.googlecode.com/svn/trunk/closure/goog/demos/hovercard.html
