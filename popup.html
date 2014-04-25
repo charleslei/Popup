@@ -25,7 +25,7 @@
             <a id="todopup1" href='javascript:;' style='border: 1px solid red'>this is a test</a>
         </div>
 
-        <a href='javascript:;' id='clickme' style="display:block;white-space:nowrap;">click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!</a>
+        <a href='javascript:;' id='clickme' style="display:block;white-space:nowrap;">click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!</a>
     </div>
     <script type="text/javascript" src="./jquery-2.1.0.min.js"></script>
     <script src="./popup.js" type="text/javascript" charset="utf-8"></script>
@@ -40,9 +40,9 @@
             	    return $('#clickme');
             }
         });
-            $('a').PopUp({evt: 'click', defEle: ':first', dir: 'l', container: '.content', getContent: function(){
+            /*$('a').PopUp({evt: 'click', defEle: ':first', dir: 'l', container: '.content', getContent: function(){
                 return $('<div style="white-space:nowrap;">this is a tttttt!</div>')
-                }});
+                }});*/
         
         /*$('#todopup').PopUp({dir: 'bm', container: '.content', beforeShow: function(dom, x, y){
             dom.empty().append($('<div style="background-color:red;width:10px;height:10px;position:absolute;left:' + x + 'px;top:' + (y-10) + 'px"></div>'));
