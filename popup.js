@@ -1,3 +1,4 @@
+//TODO：三种模式下的适配方式是否应该一致？
 (function($, win, doc) {
   function popup(config) {
     var $this = $(this);
@@ -7,17 +8,37 @@
   }
 
   function pp(config) {
+    this.POSITIONS = {
+      lt: 'LEFTTOP',
+      rt: 'RIGHTTOP',
+      rb: 'RIGHTBOTTOM',
+      lb: 'LEFTBOTTOM',
+      l: 'LEFT',
+      t: 'TOP',
+      r: 'RIGHT',
+      b: 'BOTTOM',
+      tm: 'TOPMIDDLE',
+      rm: 'RIGHTMIDDLE',
+      bm: 'BOTTOMMIDDLE',
+      lm: 'LEFTMIDDLE',
+      cur: 'CURSOR'
+    }; //左上，右上，右下，左下
+    this.defautlDir = 'b';
+
     var prms = {
       eles: '',
       evt: '', //default: '';alternative: 'hover', 'click'
-      dir: 'lb',
+      dir: this.defautlDir,
       container: 'body',
       beforeShow: function() {},
       getContent: function(){},
       delta: 0,
       defEle: '' //默认显示弹窗的元素；只在未设置鼠标交互事件时启用；
     };
+
     $.extend(prms, config);
+    //get ride of unexpected dir value;
+    (!this.POSITIONS[prms.dir]) && (prms.dir = this.defautlDir);
     this.params = prms;
     this._init();
   }
@@ -28,9 +49,10 @@
       var eles = this.params.eles;
       var evt = this.params.evt;
       this._drawHTML();
-      me.rect = {};
+      me.rect = {}; //悬浮窗的左上角坐标和长宽；
       me.findCount = 0;
-      me.DIRS = ['RIGHT', 'BOTTOM', 'LEFT', 'TOP'];
+      me.DIRS = ['RIGHT', 'BOTTOM', 'LEFT', 'TOP'];  //目前的适配参数；RECT模式下的适配.
+      me.tempDir = [].concat(me.DIRS);  //适配方向时的默认临时参数，会被更改；RECT模式下的适配.
 
       if(this.params.evt === 'hover'){
         eles.bind('mouseover.popup', function(e) {
@@ -86,34 +108,15 @@
          e：mouse；弹窗左上角为鼠标位置；左右位置可自适应；
          */
 
-      var po = me._getPosition(me.params.dir);
+
+      var pts = me.POSITIONS, dir = me.params.dir;
+      var po = me._getPositionExec(pts[dir]);
       me.params.dom.css('left', po.x).css('top', po.y).show();
     },
 
     _hideWin: function() {
       var me = this;
       me.params.dom.hide();
-    },
-
-    _getPosition: function(po) {
-      var me = this;
-      var pts = {
-        lt: 'LEFTTOP',
-        rt: 'RIGHTTOP',
-        rb: 'RIGHTBOTTOM',
-        lb: 'LEFTBOTTOM',
-        l: 'LEFT',
-        t: 'TOP',
-        r: 'RIGHT',
-        b: 'BOTTOM',
-        tm: 'TOPMIDDLE',
-        rm: 'RIGHTMIDDLE',
-        bm: 'BOTTOMMIDDLE',
-        lm: 'LEFTMIDDLE',
-        cur: 'CURSOR'
-      }; //左上，右上，右下，左下
-
-      return me._getPositionExec(pts[po]);
     },
 
     _getPositionExec: function(dir) {
@@ -437,31 +440,24 @@
       me.params.beforeShow(me.params.dom, x0, y0);
     },
 
-    _oppoDirect: function(dir) {
-      var me = this, dirs = me.tempDir;
-      me.tempDir = dirs && dirs.length > 0 ? dirs : [].concat(me.DIRS);
-      if (me.tempDir.length > 0) {
-        return me._nextDirect(dir);
-      } else {
-        return dir;
-      }
-    },
-
-    _nextDirect: function(ori) {
-      // me.DIRS = ['RIGHT', 'BOTTOM', 'LEFT', 'TOP'];
+    _oppoDirect: function(dir) {  //RECT
       var me = this, tempDir = me.tempDir;
-
       var dirsDic = {
         RIGHT: 'LEFT',
         LEFT: 'RIGHT',
         TOP: 'BOTTOM',
         BOTTOM: 'TOP'
       };
-      tempDir.splice(tempDir.indexOf(ori), 1);
-      var next = dirsDic[ori];
-      var idx = tempDir.indexOf(next);
 
-      return idx >= 0 ? next : tempDir[0];
+      if (tempDir && tempDir.length > 0) {
+        tempDir.splice(tempDir.indexOf(dir), 1);
+        var next = dirsDic[dir];
+        var idx = tempDir.indexOf(next);
+        return idx >= 0 ? next : tempDir[0];
+      } else {
+        me.tempDir = [].concat(me.DIRS);
+        return me.POSITIONS[me.params.dir]; //return origin dir
+      }
     }
   };
 
