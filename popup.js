@@ -26,7 +26,7 @@
     this.defautlDir = 'b';
 
     var prms = {
-      eles: '',	//可以显示悬浮窗的元素，程序自动设置，用户设置无效；
+      eles: '', //可以显示悬浮窗的元素，程序自动设置，用户设置无效；
       evt: '', //default: '';alternative: 'hover', 'click'
       dir: this.defautlDir, //默认的悬浮框位置：b；
       container: 'body',  //悬浮框的边界，默认为document文档的body内；
@@ -47,13 +47,25 @@
     _init: function() {
       var me = this;
       var eles = this.params.eles;
-      var evt = this.params.evt;
       this._drawHTML();
       me.rect = {}; //悬浮窗的左上角坐标和长宽；
       me.findCount = 0;
       me.DIRS = ['RIGHT', 'BOTTOM', 'LEFT', 'TOP'];  //目前的适配参数；RECT模式下的适配.
       me.tempDir = [].concat(me.DIRS);  //适配方向时的默认临时参数，会被更改；RECT模式下的适配.
 
+      var ele = me.params.eles.filter(me.params.defEle);
+      if(ele.length){
+        me.params.origin = ele;
+        me._showWin();
+      }
+
+      me._initEvt();
+    },
+
+    _initEvt: function(){
+      var me = this;
+      var eles = this.params.eles;
+      var evt = this.params.evt;
       if(this.params.evt === 'hover'){
         eles.bind('mouseover.popup', function(e) {
           me.params.cursorPosition = { x: e.pageX, y: e.pageY };
@@ -70,11 +82,6 @@
           me._showWin();
         });
       }
-      var ele = me.params.eles.filter(me.params.defEle);
-      if(ele.length){
-        me.params.origin = ele;
-        me._showWin();
-      }
 
       //设置container的样式；
       //$(me.params.container).css('position', 'relative');
@@ -85,13 +92,18 @@
         }
       })
     },
+
+    _getContent: function(){
+      var me = this, origin = me.params.origin;
+      var con = me.params.getContent(origin);
+      return con || '';
+    },
+
     _drawHTML: function() {
       var _html = '<div class="popup"></div>';
       var obj = $(_html);
       this.params.dom = obj;
       $(this.params.container).append(obj);
-      var ctn = this.params.getContent();
-      obj.append(ctn);
     },
 
     //show popup window;
@@ -108,8 +120,8 @@
          e：mouse；弹窗左上角为鼠标位置；左右位置可自适应；
          */
 
-
       var pts = me.POSITIONS, dir = me.params.dir;
+      me.params.dom.empty().append(me._getContent());
       var po = me._getPositionExec(pts[dir]);
       me.params.dom.css('left', po.x).css('top', po.y).show();
     },
