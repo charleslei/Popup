@@ -3,8 +3,8 @@
   function popup(config) {
     var $this = $(this);
     var cfg = {eles: $this};
-    $.extend(cfg, config);
-    new pp(cfg);
+    $.extend(config, cfg);
+    new pp(config);
   }
 
   function pp(config) {
@@ -26,12 +26,12 @@
     this.defautlDir = 'b';
 
     var prms = {
-      eles: '',
+      eles: '',	//可以显示悬浮窗的元素，程序自动设置，用户设置无效；
       evt: '', //default: '';alternative: 'hover', 'click'
-      dir: this.defautlDir,
-      container: 'body',
-      beforeShow: function() {},
-      getContent: function(){},
+      dir: this.defautlDir, //默认的悬浮框位置：b；
+      container: 'body',  //悬浮框的边界，默认为document文档的body内；
+      beforeShow: function() {},//悬浮框显示前的触发事件；
+      getContent: function(){}, //获取悬浮框的内容；
       delta: 0,
       defEle: '' //默认显示弹窗的元素；只在未设置鼠标交互事件时启用；
     };
@@ -124,13 +124,13 @@
       var x = '', y = '';
       var me = this;
       var origin = me.params.origin;
-      var oW = origin.width();
-      var oH = origin.height();
+      var oW = origin.outerWidth();
+      var oH = origin.outerHeight();
       var lt = origin.offset();
       var popupWin = me.params.dom;
-      var pW = popupWin.width();
-      var pH = popupWin.height();0
-        var cp = me.params.cursorPosition;
+      var pW = popupWin.outerWidth();
+      var pH = popupWin.outerHeight();
+      var cp = me.params.cursorPosition;
       var adjustSuccess = true;
       var delta = me.params.delta;
 
@@ -164,7 +164,7 @@
           break;
         case 'RIGHTTOP':
           x = lt.left + oW;
-          y = lt.top;
+          y = lt.top - pH;
           po = POS[1];
           break;
         case 'RIGHTBOTTOM':
@@ -173,7 +173,7 @@
           po = POS[1];
           break;
         case 'LEFTBOTTOM':
-          x = lt.left;
+          x = lt.left - pW;
           y = lt.top + oH;
           po = POS[1];
           break;
@@ -215,7 +215,7 @@
         if(po === POS[0]) {
           me._adjustMiddlePostion(me.rect, dir, po);
         } else if (po === POS[1]) {
-          //TODO:
+          me._adjustCornerPost(me.rect, dir, po);
         } else if (po === POS[2]) {
           me._adjustRECTPostion(me.rect, dir, po);
         }
@@ -230,8 +230,8 @@
     _adjustMiddlePostion: function(rect, dir){
       var me = this;
       var ctn = me.params.container;
-      var cH = $(ctn).height();
-      var cW = $(ctn).width();
+      var cH = $(ctn).outerHeight();
+      var cW = $(ctn).outerWidth();
       var cOffset = $(ctn).offset();
       var cx = cOffset.left;
       var cy = cOffset.top;
@@ -324,11 +324,16 @@
       me.params.beforeShow(me.params.dom, x0, y0);
     },
 
+    _adjustCornerPost: function(rect, dir){
+      var me = this;
+      //TODO:
+    },
+
     _adjustRECTPostion: function(rect, dir) {
       var me = this;
       var ctn = me.params.container;
-      var cH = $(ctn).height();
-      var cW = $(ctn).width();
+      var cH = $(ctn).outerHeight();
+      var cW = $(ctn).outerWidth();
       var cOffset = $(ctn).offset();
       var cx = cOffset.left;
       var cy = cOffset.top;
@@ -339,8 +344,8 @@
       var h = rect.h;
 
       var origin = me.params.origin;
-      var oW = origin.width();
-      var oH = origin.height();
+      var oW = origin.outerWidth();
+      var oH = origin.outerHeight();
       var oOffset = origin.offset();
       var ox = oOffset.left;
       var oy = oOffset.top;
