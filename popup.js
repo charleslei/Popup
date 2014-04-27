@@ -210,7 +210,7 @@
           po = POS[0];
           break;
         case 'CURSOR': //2px的缓冲；
-          x = cp.x + 2;
+          x = cp.x + 2; //TODO:fix，默认鼠标点悬浮时，这里有bug；鼠标点未获取到，弹框不展示；
           y = cp.y + 2;
           break;
         default: //下方
