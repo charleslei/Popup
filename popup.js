@@ -109,7 +109,7 @@
     },
 
     _drawHTML: function() {
-      var _html = '<div class="popup"></div>';
+      var _html = '<div style="position: absolute;left: 0;top: 0;width: auto;height: auto;display: none;;white-space:nowrap;"></div>';
       var obj = $(_html);
       this.params.dom = obj;
       $(this.params.container).append(obj);
