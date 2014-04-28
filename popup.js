@@ -108,7 +108,6 @@
 
     //show popup window;
     _showWin: function() {
-      var me = this;
       /*
          显示位置的说明：
          1、默认弹框左上角与触发元素的左下角重合；左右自适应；
@@ -119,11 +118,13 @@
          d：bottom；与默认设置相同；
          e：mouse；弹窗左上角为鼠标位置；左右位置可自适应；
          */
+      var me = this;
+      me.params.dom.hide();
 
       var pts = me.POSITIONS, dir = me.params.dir;
       me.params.dom.empty().append(me._getContent());
       var po = me._getPositionExec(pts[dir]);
-      me.params.dom.css('left', po.x).css('top', po.y).show();
+      po && me.params.dom.css({'left': po.x, 'top': po.y}).show();
     },
 
     _hideWin: function() {
@@ -142,7 +143,7 @@
       var popupWin = me.params.dom;
       var pW = popupWin.outerWidth();
       var pH = popupWin.outerHeight();
-      var cp = me.params.cursorPosition;
+      var cp = me.params.cursorPosition || {};
       var adjustSuccess = true;
       var delta = me.params.delta;
 
@@ -210,7 +211,7 @@
           po = POS[0];
           break;
         case 'CURSOR': //2px的缓冲；
-          x = cp.x + 2; //TODO:fix，默认鼠标点悬浮时，这里有bug；鼠标点未获取到，弹框不展示；
+          x = cp.x + 2;
           y = cp.y + 2;
           break;
         default: //下方
@@ -236,7 +237,11 @@
       }
       me.tempDir = [];
       me.findCount = 0;
-      return { x: x + 'px', y: y + 'px' };
+      if(x !== undefined && y !== undefined && !Number.isNaN(x) && !Number.isNaN(y)){
+        return { x: x + 'px', y: y + 'px' };
+      }else{
+        return null;
+      }
     },
 
     _adjustMiddlePostion: function(rect, dir){
