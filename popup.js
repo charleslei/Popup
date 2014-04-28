@@ -2,9 +2,17 @@
 (function($, win, doc) {
   function popup(config) {
     var $this = $(this);
-    var cfg = {eles: $this};
-    $.extend(config, cfg);
-    new pp(config);
+    if (config.showAll) {
+      var cfg = {};
+      $.each($this, function(k, v){
+        $.extend(cfg, config, {eles: $(v) });
+        new pp(cfg);
+      })      
+    } else {
+        var cfg = {};
+        $.extend(cfg, config, {eles: $this });
+        new pp(config);      
+    }
   }
 
   function pp(config) {
@@ -33,7 +41,8 @@
       beforeShow: function() {},//悬浮框显示前的触发事件；
       getContent: function(){}, //获取悬浮框的内容；
       delta: 0,
-      defEle: '' //默认显示弹窗的元素；只在未设置鼠标交互事件时启用；
+      defEle: '', //默认显示弹窗的元素；只在未设置鼠标交互事件时启用；
+      showAll: false
     };
 
     $.extend(prms, config);
@@ -202,8 +211,8 @@
           break;
         case 'BOTTOMMIDDLE':
           x = lt.left - (pW - oW) / 2;
-          y = lt.top + delta + oH
-            po = POS[0];
+          y = lt.top + delta + oH;
+          po = POS[0];
           break;
         case 'LEFTMIDDLE':
           x = lt.left - delta - pW;
@@ -238,7 +247,7 @@
       me.tempDir = [];
       me.findCount = 0;
       if(x !== undefined && y !== undefined && !Number.isNaN(x) && !Number.isNaN(y)){
-        return { x: x + 'px', y: y + 'px' };
+        return { x: (x + 'px'), y: (y + 'px') };
       }else{
         return null;
       }
