@@ -11,7 +11,7 @@
     } else {
         var cfg = {};
         $.extend(cfg, config, {eles: $this });
-        new pp(config);      
+        new pp(cfg);      
     }
   }
 
@@ -131,7 +131,7 @@
       me.params.dom.hide();
 
       var pts = me.POSITIONS, dir = me.params.dir;
-      me.params.dom.empty().append(me._getContent());
+      me.params.dom.empty().append(me._getContent());//这里会清空getContent返回的内容，所以返回的内容应该动态生成；
       var po = me._getPositionExec(pts[dir]);
       po && me.params.dom.css({'left': po.x, 'top': po.y}).show();
     },
@@ -156,7 +156,7 @@
       var adjustSuccess = true;
       var delta = me.params.delta;
 
-      var POS = ['MIDDLE', 'CORNER', 'RECT'];
+      var POS = ['MIDDLE', 'CORNER', 'RECT', 'CUR'];
       var po = '';
       switch (dir) {
         case 'LEFT':
@@ -222,11 +222,13 @@
         case 'CURSOR': //2px的缓冲；
           x = cp.x + 2;
           y = cp.y + 2;
+		  po = POS[3];
           break;
         default: //下方
           x = lt.left;
           y = lt.top + oH;
           dir = 'BOTTOM';
+		  po = POS[2];
           adjustSuccess = false;
           break;
       }
@@ -240,7 +242,9 @@
           me._adjustCornerPost(me.rect, dir, po);
         } else if (po === POS[2]) {
           me._adjustRECTPostion(me.rect, dir, po);
-        }
+        } else if (po === POS[3]) {
+		  me._adjustCursorPostion(me.rect, dir, po);
+		}
         x = me.rect.x;
         y = me.rect.y;
       }
@@ -470,6 +474,13 @@
       }
       me.params.beforeShow(me.params.dom, x0, y0);
     },
+	
+	_adjustCursorPostion: function(){
+	  var me = this;
+	  var x0 = me.rect.x;
+	  var y0 = me.rect.y;
+      me.params.beforeShow(me.params.dom, x0, y0);
+	},
 
     _oppoDirect: function(dir) {  //RECT
       var me = this, tempDir = me.tempDir;
