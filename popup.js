@@ -42,7 +42,8 @@
       getContent: function(){}, //获取悬浮框的内容；
       delta: 0,
       defEle: '', //默认显示弹窗的元素；只在未设置鼠标交互事件时启用；
-      showAll: false
+      showAll: false,
+	  maxWidth: 0
     };
 
     $.extend(prms, config);
