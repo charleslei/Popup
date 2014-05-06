@@ -43,7 +43,7 @@
       delta: 0,
       defEle: '', //默认显示弹窗的元素；只在未设置鼠标交互事件时启用；
       showAll: false,
-	  maxWidth: 0
+      maxWidth: 0
     };
 
     $.extend(prms, config);
@@ -223,13 +223,13 @@
         case 'CURSOR': //2px的缓冲；
           x = cp.x + 2;
           y = cp.y + 2;
-		  po = POS[3];
+          po = POS[3];
           break;
         default: //下方
           x = lt.left;
           y = lt.top + oH;
           dir = 'BOTTOM';
-		  po = POS[2];
+          po = POS[2];
           adjustSuccess = false;
           break;
       }
@@ -244,8 +244,8 @@
         } else if (po === POS[2]) {
           me._adjustRECTPostion(me.rect, dir, po);
         } else if (po === POS[3]) {
-		  me._adjustCursorPostion(me.rect, dir, po);
-		}
+          me._adjustCursorPostion(me.rect, dir, po);
+        }
         x = me.rect.x;
         y = me.rect.y;
       }
