@@ -110,7 +110,7 @@
     },
 
     _drawHTML: function() {
-      var _html = '<div style="position: absolute;left: 0;top: 0;width: auto;height: auto;display: none;;white-space:nowrap;"></div>';
+      var _html = '<div style="position: absolute;left: 0;top: 0;width: auto;height: auto;display: none;;white-space:nowrap;overflow:hidden"></div>';
       var obj = $(_html);
       this.params.dom = obj;
       $(this.params.container).append(obj);
@@ -133,6 +133,12 @@
 
       var pts = me.POSITIONS, dir = me.params.dir;
       me.params.dom.empty().append(me._getContent());//这里会清空getContent返回的内容，所以返回的内容应该动态生成；
+
+      //enable max-width for dom;
+      if(me.params.dom.outerWidth() > me.params.maxWidth){
+        me.params.dom.css('width', me.params.maxWidth);
+      }
+      
       var po = me._getPositionExec(pts[dir]);
       po && me.params.dom.css({'left': po.x, 'top': po.y}).show();
     },
@@ -251,7 +257,8 @@
       }
       me.tempDir = [];
       me.findCount = 0;
-      if(x !== undefined && y !== undefined && !Number.isNaN(x) && !Number.isNaN(y)){
+      //if(x !== undefined && y !== undefined && !Number.isNaN(x) && !Number.isNaN(y)){
+      if(x !== undefined && y !== undefined){
         return { x: (x + 'px'), y: (y + 'px') };
       }else{
         return null;
