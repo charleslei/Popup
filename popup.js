@@ -110,7 +110,7 @@
     },
 
     _drawHTML: function() {
-      var _html = '<div style="position: absolute;left: 0;top: 0;width: auto;height: auto;display: none;;white-space:nowrap;overflow:hidden"></div>';
+      var _html = '<div style="position: absolute;left: 0;top: 0;width: auto;height: auto;display: none;;white-space:nowrap;"></div>';
       var obj = $(_html);
       this.params.dom = obj;
       $(this.params.container).append(obj);
@@ -135,7 +135,7 @@
       me.params.dom.empty().append(me._getContent());//这里会清空getContent返回的内容，所以返回的内容应该动态生成；
 
       //enable max-width for dom;
-      if(me.params.dom.outerWidth() > me.params.maxWidth){
+      if(me.params.maxWidth !== 0 && me.params.dom.outerWidth() > me.params.maxWidth){
         me.params.dom.css('width', me.params.maxWidth);
       }
       
@@ -268,8 +268,8 @@
     _adjustMiddlePostion: function(rect, dir){
       var me = this;
       var ctn = me.params.container;
-      var cH = $(ctn).outerHeight();
-      var cW = $(ctn).outerWidth();
+      var cH = $(ctn).height();
+      var cW = $(ctn).width();
       var cOffset = $(ctn).offset();
       var cx = cOffset.left;
       var cy = cOffset.top;
@@ -370,8 +370,9 @@
     _adjustRECTPostion: function(rect, dir) {
       var me = this;
       var ctn = me.params.container;
-      var cH = $(ctn).outerHeight();
-      var cW = $(ctn).outerWidth();
+      //这里只能取内部宽度，否则会在padding和margin之外；
+      var cH = $(ctn).height(); 
+      var cW = $(ctn).width();
       var cOffset = $(ctn).offset();
       var cx = cOffset.left;
       var cy = cOffset.top;
@@ -482,13 +483,13 @@
       }
       me.params.beforeShow(me.params.dom, x0, y0);
     },
-	
-	_adjustCursorPostion: function(){
-	  var me = this;
-	  var x0 = me.rect.x;
-	  var y0 = me.rect.y;
+
+    _adjustCursorPostion: function(){
+      var me = this;
+      var x0 = me.rect.x;
+      var y0 = me.rect.y;
       me.params.beforeShow(me.params.dom, x0, y0);
-	},
+    },
 
     _oppoDirect: function(dir) {  //RECT
       var me = this, tempDir = me.tempDir;
