@@ -376,9 +376,11 @@
       //这里只能取内部宽度，否则会在padding和margin之外；
       var cH = $(ctn).height(); 
       var cW = $(ctn).width();
+      var cH0 = $(ctn).outerHeight(); 
+      var cW0 = $(ctn).outerWidth();
       var cOffset = $(ctn).offset();
-      var cx = cOffset.left;
-      var cy = cOffset.top;
+      var cx = cOffset.left + (cW0 - cW) / 2;
+      var cy = cOffset.top + (cH0 - cH) / 2;
 
       var x = rect.x;
       var y = rect.y;
