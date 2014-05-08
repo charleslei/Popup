@@ -270,9 +270,12 @@
       var ctn = me.params.container;
       var cH = $(ctn).height();
       var cW = $(ctn).width();
+
+      var cH0 = $(ctn).outerHeight(); 
+      var cW0 = $(ctn).outerWidth();
       var cOffset = $(ctn).offset();
-      var cx = cOffset.left;
-      var cy = cOffset.top;
+      var cx = cOffset.left + (cW0 - cW) / 2; //增加padding-top和border-top的宽度；
+      var cy = cOffset.top + (cH0 - cH) / 2;  //增加padding-left和border-left的宽度；
 
       var x = rect.x;
       var y = rect.y;
