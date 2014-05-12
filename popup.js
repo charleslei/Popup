@@ -294,7 +294,7 @@
               y0 = h / 2 - (y - rect.y);
             }
             if(y + h > cy + cH){
-              y = cy + cH - h + 1;
+              y = cy + cH - h;
               y0 = h / 2 + rect.y - y;
             }
             break;
@@ -306,7 +306,7 @@
               y0 = h / 2 - (y - rect.y);
             }
             if(y + h > cy + cH){
-              y = cy + cH - h + 1;
+              y = cy + cH - h;
               y0 = h / 2 + rect.y - y;
             }
             break;
@@ -318,7 +318,7 @@
               x0 = w / 2 - (x - rect.x);;
             }
             if(x + w > cx + cW){
-              x = cx + cW - w + 1;
+              x = cx + cW - w;
               x0 = w / 2 + rect.x - x ;
             }
             break;
@@ -330,7 +330,7 @@
               x0 = w / 2 - (x - rect.x);;
             }
             if(x + w > cx + cW){
-              x = cx + cW - w + 1;
+              x = cx + cW - w;
               x0 = w / 2 + rect.x - x ;
             }
             break;
@@ -409,7 +409,7 @@
             y0 = deltaY ? oH / 2 : h / 2;
 
             if(y + h > cy + cH){
-              rect.y = cy + cH - h + 1;
+              rect.y = cy + cH - h;
               y0 = deltaY ? oH / 2 + y + h - cy - cH : h / 2;
             }
             //左侧超限，dir为right
@@ -423,7 +423,7 @@
             x0 = 0;
             y0 = deltaY ? oH / 2 : h / 2;
             if(y + h > cy + cH){
-              rect.y = cy + cH - h + 1;
+              rect.y = cy + cH - h;
               y0 = deltaY ? oH / 2 + y + h - cy - cH : h / 2;
             }
             //右侧超限，dir为left
@@ -437,7 +437,7 @@
             x0 = deltaX ? oW / 2 : w / 2;
             y0 = h;
             if(x + w > cx + cW){
-              rect.x = cx + cW - w + 1;
+              rect.x = cx + cW - w;
               x0 = deltaX ? oW / 2 + x + w - cx - cW : w / 2;
             }
             //上部超限，dir为bottom
@@ -451,7 +451,7 @@
             y0 = 0;
             //右侧超限，向左移；左侧最小值为0；
             if(x + w > cx + cW){
-              rect.x = cx + cW - w + 1;
+              rect.x = cx + cW - w;
               x0 = deltaX ? oW / 2 + x + w - cx - cW : w / 2;
             }
             //下部超限，dir为top

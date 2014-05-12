@@ -7,7 +7,7 @@
         .content{
             width: 990px;
             margin: 0 auto;
-            border:1px solid #999;
+            border:10px solid green;
             min-height: 125px;
             margin-top: 70px;
             height:220px;
@@ -32,12 +32,13 @@
     <script type="text/javascript">
 
     $(function(){
-        $('#todopup1').PopUp({evt: 'click', dir: 'cur', defEle: ':first', container: '.content', delta: 10, 
+        $('#todopup1').PopUp({evt: 'click', dir: 'tm', container: '.content', delta: 10, 
         	beforeShow: function(dom, x, y){
             	    dom.append($('<div style="background-color:red;width:10px;height:10px;position:absolute;left:' + (x-5) + 'px;top:' + (y-5) + 'px"></div>'));
             },
             getContent: function(){
-            	    return $("<a href='javascript:;' id='clickme' style='display:block;white-space:nowrap;'>click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!</a>");
+            	    //return $("<a href='javascript:;' id='clickme' style='background-color:grey;display:block;white-space:nowrap;'>click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!</a>");
+					return $("<div style='width:200px;height:150px;background-color:yellow'></div>");
             }
         });
             /*$('a').PopUp({evt: 'click', defEle: ':first', dir: 'l', container: '.content', getContent: function(){
