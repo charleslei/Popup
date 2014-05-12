@@ -36,10 +36,10 @@
     var prms = {
       eles: '', //可以显示悬浮窗的元素，程序自动设置，用户设置无效；
       evt: '', //default: '';alternative: 'hover', 'click'
-      dir: this.defautlDir, //默认的悬浮框位置：b；
+      dir: this.defautlDir, //default position：b/bottom；
       container: 'body',  //悬浮框的边界，默认为document文档的body内；
-      beforeShow: function() {},//悬浮框显示前的触发事件；
-      getContent: function(){}, //获取悬浮框的内容；
+      beforeShow: function() {},//trigger before popup window showen；
+      getContent: function(){}, //get popup window content；
       delta: 0,
       defEle: '', //默认显示弹窗的元素；只在未设置鼠标交互事件时启用；
       showAll: false,
@@ -257,7 +257,6 @@
       }
       me.tempDir = [];
       me.findCount = 0;
-      //if(x !== undefined && y !== undefined && !Number.isNaN(x) && !Number.isNaN(y)){
       if(x !== undefined && y !== undefined){
         return { x: (x + 'px'), y: (y + 'px') };
       }else{
