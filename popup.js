@@ -1,4 +1,3 @@
-//TODO：三种模式下的适配方式是否应该一致？
 (function($, win, doc) {
     function popup(config) {
         var $this = $(this);
@@ -21,10 +20,10 @@
             rt: 'RIGHTTOP',
             rb: 'RIGHTBOTTOM',
             lb: 'LEFTBOTTOM',
-            l: 'LEFT',
-            t: 'TOP',
-            r: 'RIGHT',
-            b: 'BOTTOM',
+            l: 'LEFT',//弹框右上角与触发元素左上角重合
+            t: 'TOP',//弹窗左下角与触发元素左上角重合；
+            r: 'RIGHT',//弹窗左上角与触发元素右上角重合；
+            b: 'BOTTOM',//与默认设置相同；
             tm: 'TOPMIDDLE',
             rm: 'RIGHTMIDDLE',
             bm: 'BOTTOMMIDDLE',
@@ -93,8 +92,6 @@
                 });
             }
 
-            //设置container的样式；
-            //$(me.params.container).css('position', 'relative');
             //注册浏览器缩放事件
             $(window).bind('resize.popup ', function(e){
                 if(me.params.origin && me.params.origin.length){
@@ -118,16 +115,6 @@
 
         //show popup window;
         _showWin: function() {
-            /*
-               显示位置的说明：
-               1、默认弹框左上角与触发元素的左下角重合；左右自适应；
-               2、可设置的值有：
-               a：left；弹框右上角与触发元素左上角重合；
-               b：top；弹窗左下角与触发元素左上角重合；
-               c：right；弹窗左上角与触发元素右上角重合；
-               d：bottom；与默认设置相同；
-               e：mouse；弹窗左上角为鼠标位置；左右位置可自适应；
-               */
             var me = this;
             me.params.dom.hide();
 
