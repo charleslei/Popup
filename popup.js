@@ -165,6 +165,9 @@
 
       var POS = ['MIDDLE', 'CORNER', 'RECT', 'CUR'];
       var po = '';
+
+      me.curDir = dir;//add value;
+
       switch (dir) {
         case 'LEFT':
           x = lt.left - pW - delta;
@@ -244,19 +247,20 @@
 
       if (adjustSuccess) {
         if(po === POS[0]) {
-          me._adjustMiddlePostion(me.rect, dir, po);
+          me._adjustMiddlePostion(po);
         } else if (po === POS[1]) {
-          me._adjustCornerPost(me.rect, dir, po);
+          me._adjustCornerPost(po);
         } else if (po === POS[2]) {
-          me._adjustRECTPostion(me.rect, dir, po);
+          me._adjustRECTPostion(po);
         } else if (po === POS[3]) {
-          me._adjustCursorPostion(me.rect, dir, po);
+          me._adjustCursorPostion(po);
         }
         x = me.rect.x;
         y = me.rect.y;
       }
       me.tempDir = [];
       me.findCount = 0;
+
       if(x !== undefined && y !== undefined){
         return { x: (x + 'px'), y: (y + 'px') };
       }else{
@@ -264,7 +268,7 @@
       }
     },
 
-    _adjustMiddlePostion: function(rect, dir){
+    _adjustMiddlePostion: function(){
       var me = this;
       var ctn = me.params.container;
       var cH = $(ctn).height();
@@ -276,6 +280,7 @@
       var cx = cOffset.left + (cW0 - cW) / 2; //增加padding-top和border-top的宽度；
       var cy = cOffset.top + (cH0 - cH) / 2;  //增加padding-left和border-left的宽度；
 
+      var rect = me.rect;
       var x = rect.x;
       var y = rect.y;
       var w = rect.w;
@@ -283,6 +288,7 @@
       var x0;
       var y0;
       var anchorP = {};
+      var dir = me.curDir;
 
       if (w <= cW && h <= cH) { //高宽超过文档范围的暂时不做处理；
         switch(dir){
@@ -364,13 +370,16 @@
       me._beforeShow(me.params.dom, x0, y0);
     },
 
-    _adjustCornerPost: function(rect, dir){
+    _adjustCornerPost: function(){
       var me = this;
+      var dir = me.curDir;
+      var rect = me.rect;
       //TODO:
     },
 
-    _adjustRECTPostion: function(rect, dir) {
+    _adjustRECTPostion: function() {
       var me = this;
+      var rect = me.rect;
       var ctn = me.params.container;
       //这里只能取内部宽度，否则会在padding和margin之外；
       var cH = $(ctn).height();
@@ -396,6 +405,7 @@
       var x0;
       var y0;
       var delta = me.params.delta;
+      var dir = me.curDir;
 
       //判断悬浮框和元素的高宽；来取中间点的坐标
       var deltaX = w - oW >= 0 ? true : false;
@@ -414,7 +424,7 @@
             }
             //左侧超限，dir为right
             if(x < cx){
-              me._getPositionExec(me._oppoDirect(dir));
+              me._getPositionExec(me._oppoDirect());
               return;
             }
             break;
@@ -428,7 +438,7 @@
             }
             //右侧超限，dir为left
             if(x + w > cx + cW){
-              me._getPositionExec(me._oppoDirect(dir));
+              me._getPositionExec(me._oppoDirect());
               return;//递归时会引起回调函数参数错误；
             }
             break;
@@ -442,7 +452,7 @@
             }
             //上部超限，dir为bottom
             if(y < cy){
-              me._getPositionExec(me._oppoDirect(dir));
+              me._getPositionExec(me._oppoDirect());
               return;
             }
             break;
@@ -456,7 +466,7 @@
             }
             //下部超限，dir为top
             if(y + h > cH + cy){
-              me._getPositionExec(me._oppoDirect(dir));
+              me._getPositionExec(me._oppoDirect());
               return;
             }
             break;
@@ -495,14 +505,10 @@
       me._beforeShow(me.params.dom, x0, y0);
     },
 
-    _oppoDirect: function(dir) {  //RECT
+    _oppoDirect: function() {  //RECT
       var me = this, tempDir = me.tempDir;
-      var dirsDic = {
-        RIGHT: 'LEFT',
-        LEFT: 'RIGHT',
-        TOP: 'BOTTOM',
-        BOTTOM: 'TOP'
-      };
+      var dirsDic = { RIGHT: 'LEFT', LEFT: 'RIGHT', TOP: 'BOTTOM', BOTTOM: 'TOP' };
+      var dir = me.curDir;
 
       if (tempDir && tempDir.length > 0) {
         tempDir.splice(tempDir.indexOf(dir), 1);
