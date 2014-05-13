@@ -7,11 +7,11 @@
       $.each($this, function(k, v){
         $.extend(cfg, config, {eles: $(v) });
         new pp(cfg);
-      })      
+      })
     } else {
         var cfg = {};
         $.extend(cfg, config, {eles: $this });
-        new pp(cfg);      
+        new pp(cfg);
     }
   }
 
@@ -138,7 +138,7 @@
       if(me.params.maxWidth !== 0 && me.params.dom.outerWidth() > me.params.maxWidth){
         me.params.dom.css('width', me.params.maxWidth);
       }
-      
+
       var po = me._getPositionExec(pts[dir]);
       po && me.params.dom.css({'left': po.x, 'top': po.y}).show();
     },
@@ -270,7 +270,7 @@
       var cH = $(ctn).height();
       var cW = $(ctn).width();
 
-      var cH0 = $(ctn).outerHeight(); 
+      var cH0 = $(ctn).outerHeight();
       var cW0 = $(ctn).outerWidth();
       var cOffset = $(ctn).offset();
       var cx = cOffset.left + (cW0 - cW) / 2; //增加padding-top和border-top的宽度；
@@ -361,7 +361,7 @@
             ;
         }
       }
-      me.params.beforeShow(me.params.dom, x0, y0);
+      me._beforeShow(me.params.dom, x0, y0);
     },
 
     _adjustCornerPost: function(rect, dir){
@@ -373,9 +373,9 @@
       var me = this;
       var ctn = me.params.container;
       //这里只能取内部宽度，否则会在padding和margin之外；
-      var cH = $(ctn).height(); 
+      var cH = $(ctn).height();
       var cW = $(ctn).width();
-      var cH0 = $(ctn).outerHeight(); 
+      var cH0 = $(ctn).outerHeight();
       var cW0 = $(ctn).outerWidth();
       var cOffset = $(ctn).offset();
       var cx = cOffset.left + (cW0 - cW) / 2;
@@ -485,14 +485,14 @@
             ;
         }
       }
-      me.params.beforeShow(me.params.dom, x0, y0);
+      me._beforeShow(me.params.dom, x0, y0);
     },
 
     _adjustCursorPostion: function(){
       var me = this;
       var x0 = me.rect.x;
       var y0 = me.rect.y;
-      me.params.beforeShow(me.params.dom, x0, y0);
+      me._beforeShow(me.params.dom, x0, y0);
     },
 
     _oppoDirect: function(dir) {  //RECT
@@ -513,7 +513,13 @@
         me.tempDir = [].concat(me.DIRS);
         return me.POSITIONS[me.params.dir]; //return origin dir
       }
+    },
+
+    _beforeShow: function(){
+        var me = this;
+        me.params.beforeShow.apply(me, arguments);
     }
+
   };
 
   $.fn.PopUp = popup;
