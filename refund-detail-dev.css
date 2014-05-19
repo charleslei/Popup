@@ -1,0 +1,120 @@
+@charset "utf-8";
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin:0; padding:0; border:0; font-size:100%; font:inherit; vertical-align:baseline; }
+body {font:normal 12px/1.5 arial,sans-serif; background:#fff; color:#555; -webkit-font-smoothing:antialiased; -webkit-text-size-adjust:100%;}
+h1, h2, h3, h4, h5, h6 { font-size:100%; }
+address, cite, dfn, em, var { font-style:normal; }
+code, kbd, pre, samp { font-family:"courier new", courier, monospace; }
+small { font-size:12px; }
+ul, ol { list-style:none; }
+a { text-decoration:none; color:#0069ca; }
+a:hover { text-decoration:none; color:#f60; }
+sup { vertical-align:text-top; }
+sub { vertical-align:text-bottom; }
+legend { color:#000; }
+fieldset, img { border:0; }
+button, input, select, textarea { font-size:100%; }
+table { border-collapse:collapse; border-spacing:0; width: 100%;}
+select { vertical-align:middle; }
+.clr, .clear { clear:both; height:0; overflow:hidden; }
+.clrfix { *zoom:1; }
+.clrfix:after { clear:both; display:block; height:0; visibility:hidden; content:"\20"; }
+.clr_after { height:1%; }
+.clr_after:after { clear:both; display:block; height:0; visibility:hidden; content:"."; }
+.hide{display: none;}
+
+/**
+ * @fileOverview 
+ * @author daiying.zhang
+ */
+.jscrollbar {position: relative}
+.jscrollbar .x, .jscrollbar .y{position: absolute; background: #484642;background: rgba(0,0,0,.3);}
+.jscrollbar .x{width: 100%; left: 0; bottom:0}
+.jscrollbar .y{height: 100%; top: 0; right: 0}
+
+.jscrollbar .x .thumb, .jscrollbar .y .thumb{position: absolute; background: #1E1E1C;background: rgba(0,0,0,.6); border-radius: 5px}
+.jscrollbar .x .thumb{height: 100%; bottom:0}
+.jscrollbar .y .thumb{width: 100%; left:0}
+
+/*page*/
+.outer_wrapper{width: 820px;height: 436px;padding: 17px 20px 20px;font-size: 12px;}
+.total{font-size:14px;margin-bottom: 16px;}
+.total h3{font-weight: bold;}
+.total h3 .clr{color:#FF6600;}
+.total h3 .road{font-size:12px;font-weight: normal;}
+
+.proc_detail{padding:26px 10px 22px;background:#F7FDFB;margin-bottom:10px;width:800px;}
+.proc_detail .gap{height:4px;margin: 0px;border:none;background:#F7FDFB;padding:0px;overflow:hidden;}
+.proc_detail .proc_pop_hide{margin-bottom:8px;opacity:0;filter:alpha(opacity=0)\0;*filter:alpha(opacity=0);width:350px;}
+.proc_detail .proc_more_hide{margin-top:18px;width:100%;opacity:0;filter:alpha(opacity=0)\0;*filter:alpha(opacity=0);}
+.graph_wrapper{_zoom:1;}
+.graph{margin: 0 50px;}
+.graph .top{height: 20px;}
+.graph .flag{float: left;width: 20px;height: 20px;display: block;}
+
+.top .stat0 .proc{background: url(/images/site/images/pay/quick_pay/refund.png) 0 -57px no-repeat;height: 20px; width: 100%;}
+.top .stat0 .proc .flag{background: url(/images/site/images/pay/quick_pay/refund.png) -85px 0 no-repeat;}
+
+.top .stat1 .proc{background: url(/images/site/images/pay/quick_pay/refund.png) 0 -29px no-repeat;height: 20px; width: 100%;}
+.top .stat1 .proc .flag{background: url(/images/site/images/pay/quick_pay/refund.png) 0 0 no-repeat;}
+
+.top .stat2{width: 20px;}
+.top .stat2 .flag{background: url(/images/site/images/pay/quick_pay/refund.png) -85px 0 no-repeat;}
+
+.top .active .proc{background: url(/images/site/images/pay/quick_pay/refund.png) 0 -57px no-repeat;}
+.top .active .proc .flag{background: url(/images/site/images/pay/quick_pay/refund.png) -40px 0 no-repeat;}
+.top .active1{width: 14px;}
+.top .active1 .proc{background: url(/images/site/images/pay/quick_pay/refund.png) 0 -57 no-repeat;width: 14px;}
+.top .active1 .proc .flag{background: url(/images/site/images/pay/quick_pay/refund.png) 0 0 no-repeat;width: 14px;}
+
+.detail_line{color: #666;font-size: 12px;width:820px;}
+.detail_line table tbody td {padding: 15px 10px;border-bottom: 1px solid #ddd;}
+.detail_line table thead td {padding: 7px 10px;}
+.detail_line .title{background: #F3F3F3;height:28px;}
+.detail_line .title div{float: left; padding: 5px 10px;}
+.detail_line .content{border-bottom:1px solid #ddd;width: 100%;}
+.detail_line .content .item{border-bottom: 1px solid #E4E4E4;}
+.detail_line .content .item:hover{background-color:#FBFBFB;}
+.detail_line .content .item .c1, .detail_line .title .c1{width: 120px}
+.detail_line .content .item .c2, .detail_line .title .c2{width: 70px}
+.detail_line .content .item .c3, .detail_line .title .c3{width: 110px}
+.detail_line .content .item .c4{width: 50px;padding:15px 0;}
+.detail_line .title .c4{padding: 5px 0;}
+.detail_line .content .item .c5, .detail_line .title .c5{width: 370px}
+
+.detail_line .item div{float: left; padding: 12px 10px;}
+.detail_line .item .more{cursor: pointer;display: inline-block;height: 12px;line-height: 12px;white-space: nowrap;}
+.detail_line .item .more span{line-height: 12px;vertical-align: middle;display:inline-block;}
+.detail_line .item .more .txt1{display: inline-block;}
+.detail_line .item .more .txt2{display: none;}
+.detail_line .item .more .icon{background: url(/images/site/images/pay/quick_pay/refund.png) -118px 0 no-repeat;display:inline-block;height:12px;width:9px;margin-left: 2px;overflow: hidden;}
+.detail_line .item .more.down .icon{background-position: -137px 0;overflow: hidden;}
+.detail_line .item .more.down .txt1{display: none;}
+.detail_line .item .more.down .txt2{display: inline;}
+.detail_line .item .more_detail{width: 730px;margin-left:10px;border-top: 1px dotted #e2e2e2;padding:11px 10px 11px 0;height: 12px;line-height: 12px;display: none;color:#999999;white-space: nowrap;overflow: hidden;}
+.detail_line .item.down{background-color:#FBFBFB;}
+.detail_line .item.down .more_detail{display:inline;}
+.detail_line .item.down .more_detail span{display: inline-block;line-height: 12px;height: 12px;vertical-align: bottom;+vertical-align: baseline;}
+.detail_line .item.down .more_detail .dir_icon{margin: 0 20px;background:#FBFBFB url(/images/site/images/pay/quick_pay/refund.png) -158px 0 no-repeat;line-height: 12px;width: 15px;height: 12px;display:inline-block;overflow: hidden;}
+
+.lg_explain_arrow span{z-index: 2;height: 0;line-height: 0;width: 0;display: block;position: absolute;left: 630px;top: 39px;border-width: 6px;border-style: solid dashed dashed dashed;border-color: #FFFEDF transparent transparent transparent;}
+.lg_explain_arrow .bottom2{border-top-color: #F9D2A6;z-index: 1;border-width: 7px;top: 39px;left: 629px;}
+
+/*error info*/
+.z_notice_ctn{width: auto;margin: 0 auto;}
+.z_notice_ctn td{margin: 0;padding: 0;vertical-align: top;}
+.z_notice_ctn .z_notice_icon_ctn{margin-top: 0;top: 0;background: url(/images/site/images/pay/quick_pay/refund.png) no-repeat 0 0;width:64px;height:64px;background-position: 0 -86px;}
+.z_notice_ctn .z_notice_txt{margin-left:10px;margin-top:13px;color:#555455;}
+.z_notice_ctn .z_notice_txt .pay_sum{font-size:16px;line-height:24px;height:24px;overflow:hidden;font-weight:bold;}
+
+
+.popup_head{border:1px solid #F8D2A6;background:#FFFDDF;padding:7px 10px;max-width:560px;white-space:normal;word-break:break-all;}
+.popup_head .line1{font-size:14px;color:#323232;}
+.popup_head .line2{font-size:12px;color:#666666;margin-top:3px;}
+
+.proc_container{height: 400px;overflow-y:auto;overflow-x:hidden;width:820px;}
+
+
+
+/*scrollbar*/
+.jscrollbar .y{background-color:#f1f1f1;}
+.jscrollbar .y .thumb{background-color:#bcbcbc;}
