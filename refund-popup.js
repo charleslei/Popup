@@ -132,7 +132,7 @@
             if(po){
                 //ie8以下浏览器在缩放时，某些级别有2像素的误差，导致文本意外换行，或超出边界；所以在计算时，需要考虑着2像素； 通过属性：this.params.delta 设置；
                 //IE6 / 7 兼容，在这两个版本的浏览器上回自动折行；
-                me.params.dom.css('width', parseInt(me.params.dom.width()) + 'px');
+                me.params.dom.css('width', parseInt(me.params.dom.width()) + me.params.delta + 'px');
                 me.params.dom.css({'left': po.x, 'top': po.y}).show();
             }
         },
@@ -224,7 +224,7 @@
             var x = 0;
             var y = 0;
             var w = popupWin.outerWidth() + delta;
-            var h = popupWin.outerHeight() + delta;
+            var h = popupWin.outerHeight();
             var offset = me.params.offset;
 
 

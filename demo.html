@@ -7,7 +7,7 @@
         .content{
             width: 990px;
             margin: 0 auto;
-            border:10px solid #aaf;
+            border:15px solid #aaf;
             min-height: 125px;
             margin-top: 70px;
             height:220px;
@@ -28,17 +28,17 @@
         <a href='javascript:;' id='clickme' style='display:block;white-space:nowrap;'>click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!</a>
     </div>
     <script type="text/javascript" src="./jquery-2.1.0.min.js"></script>
-    <script src="./popup.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./refund-popup.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
 
     $(function(){
-        $('#todopup1').PopUp({evt: 'click', dir: 'tm', container: '.content', delta: 10, 
+        $('#todopup1').PopUp({evt: 'click', dir: 'tm', container: '.content', offset: 10, 
             beforeShow: function(dom, x, y){
                 dom.append($('<div style="background-color:red;width:10px;height:10px;position:absolute;left:' + (x-5) + 'px;top:' + (y-10) + 'px"></div>'));
             },
             getContent: function(){
                 //return $("<a href='javascript:;' id='clickme' style='background-color:grey;display:block;white-space:nowrap;'>click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!</a>");
-                return $("<div style='width:200px;height:150px;background-color:#99f'></div>");
+                return $("<div style='height:150px;background-color:#99f'>打法打法斯蒂芬阿斯顿发送打法发送打法</div>");
             }
         });
             /*$('a').PopUp({evt: 'click', defEle: ':first', dir: 'l', container: '.content', getContent: function(){
@@ -51,7 +51,7 @@
         }});
         $('#todopup1').PopUp({dir: 'tm', container: '.content', beforeShow: function(dom, x, y){
             dom.empty().append($('<div style="background-color:red;width:10px;height:10px;position:absolute;left:' + x + 'px;top:' + (y) + 'px"></div>'));
-        }, delta: 10});*/
+        }, offset: 10});*/
     })
 
         $('#clickme').click(function(e){
