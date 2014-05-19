@@ -246,12 +246,10 @@
       $.extend(me.rect, { x: x, y: y, w: pW, h: pH });
 
       if (adjustSuccess) {
-        if(po === POS[0]) {
-          me._adjustMiddlePostion(po);
+        if(po === POS[0] && po === POS[2]) {
+          me._adjustPostion(po);
         } else if (po === POS[1]) {
           me._adjustCornerPost(po);
-        } else if (po === POS[2]) {
-          me._adjustRECTPostion(po);
         } else if (po === POS[3]) {
           me._adjustCursorPostion(po);
         }
@@ -268,7 +266,7 @@
       }
     },
 
-    _adjustMiddlePostion: function(){
+    _adjustPostion: function(){
       var me = this;
       //container;
       var ctn = $(me.params.container);
@@ -298,7 +296,6 @@
       var y = rect.y;
       var w = rect.w;
       var h = rect.h;
-
 
       //anchor;
       var anchorX0;
@@ -358,6 +355,63 @@
               anchorX0 = orgOffset.left - ctnOffset.left - x + orgW / 2;
             }
             break;
+          case 'LEFT':
+            //下侧超限，向上移；上侧最小值为0；
+            anchorX0 = w;
+            anchorY0 = deltaY ? oH / 2 : h / 2;
+
+            if(y + h > cy + cH){
+              rect.y = cy + cH - h;
+              anchorY0 = deltaY ? oH / 2 + y + h - cy - cH : h / 2;
+            }
+            //左侧超限，dir为right
+            if(x < cx){
+              me._getPositionExec(me._oppoDirect());
+              return;
+            }
+            break;
+          case 'RIGHT':
+            //下侧超限，向上移；上侧最小值为0；
+            anchorX0 = 0;
+            anchorY0 = deltaY ? oH / 2 : h / 2;
+            if(y + h > cy + cH){
+              rect.y = cy + cH - h;
+              anchorY0 = deltaY ? oH / 2 + y + h - cy - cH : h / 2;
+            }
+            //右侧超限，dir为left
+            if(x + w > cx + cW){
+              me._getPositionExec(me._oppoDirect());
+              return;//递归时会引起回调函数参数错误；
+            }
+            break;
+          case 'TOP':
+            //右侧超限，向左移；左侧最小值为0；
+            anchorX0 = deltaX ? oW / 2 : w / 2;
+            anchorY0 = h;
+            if(x + w > cx + cW){
+              rect.x = cx + cW - w;
+              anchorX0 = deltaX ? oW / 2 + x + w - cx - cW : w / 2;
+            }
+            //上部超限，dir为bottom
+            if(y < cy){
+              me._getPositionExec(me._oppoDirect());
+              return;
+            }
+            break;
+          case 'BOTTOM':
+            anchorX0 = deltaX ? oW / 2 : w / 2;
+            anchorY0 = 0;
+            //右侧超限，向左移；左侧最小值为0；
+            if(x + w > cx + cW){
+              rect.x = cx + cW - w;
+              anchorX0 = deltaX ? oW / 2 + x + w - cx - cW : w / 2;
+            }
+            //下部超限，dir为top
+            if(y + h > cH + cy){
+              me._getPositionExec(me._oppoDirect());
+              return;
+            }
+            break;
           default:
             ;
         }
@@ -382,6 +436,22 @@
             anchorX0 = w / 2;
             anchorY0 = 0;
             break;
+          case 'LEFT':
+            anchorX0 = w;
+            anchorY0 = oH / 2;
+            break;
+          case 'RIGHT':
+            anchorX0 = 0;
+            anchorY0 = oH / 2;
+            break;
+          case 'TOP':
+            anchorX0 = oW / 2;
+            anchorY0 = h;
+            break;
+          case 'BOTTOM':
+            anchorX0 = oW / 2;
+            anchorY0 = 0;
+            break;
           default:
             ;
         }
@@ -394,128 +464,6 @@
       var dir = me.curDir;
       var rect = me.rect;
       //TODO:
-    },
-
-    _adjustRECTPostion: function() {
-      var me = this;
-      var ctn = me.params.container;
-      //这里只能取内部宽度，否则会在padding和margin之外；
-      var cH = $(ctn).height(); 
-      var cW = $(ctn).width();
-      var cH0 = $(ctn).outerHeight(); 
-      var cW0 = $(ctn).outerWidth();
-      var cOffset = $(ctn).offset();
-      var cx = cOffset.left + (cW0 - cW) / 2;
-      var cy = cOffset.top + (cH0 - cH) / 2;
-
-      var rect = me.rect;
-      var x = rect.x;
-      var y = rect.y;
-      var w = rect.w;
-      var h = rect.h;
-
-      var origin = me.params.origin;
-      var oW = origin.outerWidth();
-      var oH = origin.outerHeight();
-      var oOffset = origin.offset();
-      var ox = oOffset.left;
-      var oy = oOffset.top;
-
-      var x0;
-      var y0;
-      var delta = me.params.delta;
-
-      //判断悬浮框和元素的高宽；来取中间点的坐标
-      var deltaX = w - oW >= 0 ? true : false;
-      var deltaY = h - oH >= 0 ? true : false;
-
-      var dir = me.curDir;
-
-      if (w <= cW && h <= cH) { //高宽超过文档范围的暂时不做处理；
-        switch (dir) {
-          case 'LEFT':
-            //下侧超限，向上移；上侧最小值为0；
-            x0 = w;
-            y0 = deltaY ? oH / 2 : h / 2;
-
-            if(y + h > cy + cH){
-              rect.y = cy + cH - h;
-              y0 = deltaY ? oH / 2 + y + h - cy - cH : h / 2;
-            }
-            //左侧超限，dir为right
-            if(x < cx){
-              me._getPositionExec(me._oppoDirect());
-              return;
-            }
-            break;
-          case 'RIGHT':
-            //下侧超限，向上移；上侧最小值为0；
-            x0 = 0;
-            y0 = deltaY ? oH / 2 : h / 2;
-            if(y + h > cy + cH){
-              rect.y = cy + cH - h;
-              y0 = deltaY ? oH / 2 + y + h - cy - cH : h / 2;
-            }
-            //右侧超限，dir为left
-            if(x + w > cx + cW){
-              me._getPositionExec(me._oppoDirect());
-              return;//递归时会引起回调函数参数错误；
-            }
-            break;
-          case 'TOP':
-            //右侧超限，向左移；左侧最小值为0；
-            x0 = deltaX ? oW / 2 : w / 2;
-            y0 = h;
-            if(x + w > cx + cW){
-              rect.x = cx + cW - w;
-              x0 = deltaX ? oW / 2 + x + w - cx - cW : w / 2;
-            }
-            //上部超限，dir为bottom
-            if(y < cy){
-              me._getPositionExec(me._oppoDirect());
-              return;
-            }
-            break;
-          case 'BOTTOM':
-            x0 = deltaX ? oW / 2 : w / 2;
-            y0 = 0;
-            //右侧超限，向左移；左侧最小值为0；
-            if(x + w > cx + cW){
-              rect.x = cx + cW - w;
-              x0 = deltaX ? oW / 2 + x + w - cx - cW : w / 2;
-            }
-            //下部超限，dir为top
-            if(y + h > cH + cy){
-              me._getPositionExec(me._oppoDirect());
-              return;
-            }
-            break;
-          default:
-            ;
-        }
-      }else{
-        switch (dir) {//获取悬浮窗相对与元素之间的中心点；
-          case 'LEFT':
-            x0 = w;
-            y0 = oH / 2;
-            break;
-          case 'RIGHT':
-            x0 = 0;
-            y0 = oH / 2;
-            break;
-          case 'TOP':
-            x0 = oW / 2;
-            y0 = h;
-            break;
-          case 'BOTTOM':
-            x0 = oW / 2;
-            y0 = 0;
-            break;
-          default:
-            ;
-        }
-      }
-      me._beforeShow(me.params.dom, x0, y0);
     },
 
     _adjustCursorPostion: function(){
