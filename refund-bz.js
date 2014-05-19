@@ -86,7 +86,7 @@ $(function() {
 
             $('.active .flag, .active1 .flag').PopUp({
                 evt: 'click',
-                dir: 'tm',
+                dir: 'bm',
                 container: '.proc_detail',
                 defEle: ':first',
                 delta: 8,
@@ -97,8 +97,13 @@ $(function() {
                     return $( '<div class="popup_head"><div class="lg_explain_arrow"><span class="bottom1"></span><span class="bottom2"></span></div><div><div class="line1">' + tips1 + '</div>' + line2Str + '</div></div>');
                 },
                 beforeShow: function(dom, x, y){
-                    dom.find('.bottom1').css({'left': x-6+'px', 'top':y-1+'px'});
-                    dom.find('.bottom2').css({'left': x-7+'px', 'top':y-1+'px'});
+                    if(this.curDir === "BOTTOMMIDDLE"){
+                        dom.find('.bottom1').hide();
+                        dom.find('.bottom2').hide();
+                    }else if(this.curDir === "TOPMIDDLE"){
+                        dom.find('.bottom1').css({'left': x-6+'px', 'top':y-1+'px'});
+                        dom.find('.bottom2').css({'left': x-7+'px', 'top':y-1+'px'});
+                    }
                 }
             });
         }
@@ -197,7 +202,7 @@ $(function() {
         });
 
 
-      $('.proc_container').jscrollbar({ width:6, position:'outer',showXBar:false});
+      //$('.proc_container').jscrollbar({ width:6, position:'outer',showXBar:false});
     }
 
     function adjustEdge(){

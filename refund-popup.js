@@ -150,8 +150,22 @@
       //container;
       var ctn = $(me.params.container);
       var ctnOffset = ctn.offset();
-      var ctnBdL = parseFloat(ctn.css('border-left-width'));   //container border-left;
+      var ctnPdT = parseFloat(ctn.css('padding-top'));   //container padding-top;
+      var ctnPdR = parseFloat(ctn.css('padding-right'));   //container padding-right;
+      var ctnPdB = parseFloat(ctn.css('padding-bottom'));   //container padding-bottom;
+      var ctnPdL = parseFloat(ctn.css('padding-left'));   //container padding-left;
+
       var ctnBdT = parseFloat(ctn.css('border-top-width'));   //container border-top;
+      var ctnBdR = parseFloat(ctn.css('border-right-width'));   //container border-right;
+      var ctnBdB = parseFloat(ctn.css('border-bottom-width'));   //container border-bottom;
+      var ctnBdL = parseFloat(ctn.css('border-left-width'));   //container border-left;
+
+      var ctnH = ctn.height();
+      var ctnW = ctn.width();
+      var ctnX = ctnOffset.left;
+      var ctnY = ctnOffset.top;
+
+      var ctnRECT = {x: ctnPdL, y: ctnPdT, w: ctnW, h: ctnH}
 
       //origin
       var origin = $(me.params.origin);
@@ -175,93 +189,20 @@
 
       me.curDir = dir;//add value;
 
-      switch (dir) {
-        case 'LEFT':
-          x = orgX - pW - delta;
-          y = orgY;
-          po = POS[2];
-          break;
-        case 'TOP':
-          x = orgX;
-          y = orgY - pH - delta;
-          po = POS[2];
-          break;
-        case 'RIGHT':
-          x = orgX + orgW + delta;
-          y = orgY;
-          po = POS[2];
-          break;
-        case 'BOTTOM':
-          x = orgX;
-          y = orgY + orgH + delta;
-          po = POS[2];
-          break;
-        case 'LEFTTOP':
-          x = orgX - pW;
-          y = orgY - pH;
-          po = POS[1];
-          break;
-        case 'RIGHTTOP':
-          x = orgX + orgW;
-          y = orgY - pH;
-          po = POS[1];
-          break;
-        case 'RIGHTBOTTOM':
-          x = orgX + orgW;
-          y = orgY + orgH;
-          po = POS[1];
-          break;
-        case 'LEFTBOTTOM':
-          x = orgX - pW;
-          y = orgY + orgH;
-          po = POS[1];
-          break;
-        case 'TOPMIDDLE':
-          x = orgX - (pW - orgW) / 2;
-          y = orgY - delta - pH;
-          po = POS[0];
-          break;
-        case 'BOTTOMMIDDLE':
-          x = orgX - (pW - orgW) / 2;
-          y = orgY + delta + orgH;
-          po = POS[0];
-          break;
-        case 'RIGHTMIDDLE':
-          x = orgX + orgW + delta;
-          y = orgY + (orgH - pH) / 2;
-          po = POS[0];
-          break;
-        case 'LEFTMIDDLE':
-          x = orgX - delta - pW;
-          y = orgY - (pH - orgH) / 2;
-          po = POS[0];
-          break;
-        case 'CURSOR': //2px的缓冲；
+      if(dir === 'CURSOR'){
+          //2px的缓冲；
           x = cp.x + 2;
           y = cp.y + 2;
           po = POS[3];
-          break;
-        default: //下方
-          x = orgX;
-          y = orgY + orgH;
-          dir = 'BOTTOM';
-          po = POS[2];
-          adjustSuccess = false;
-          break;
       }
 
-      $.extend(me.rect, { x: x, y: y, w: pW, h: pH });
-
       if (adjustSuccess) {
-        if(po === POS[0]) {
-          me._adjustMiddlePostion(po);
-        } else if (po === POS[1]) {
-          me._adjustCornerPost(po);
-        } else if (po === POS[2]) {
-          me._adjustRECTPostion(po);
-        } else if (po === POS[3]) {
+        if(po === POS[3]) {
           me._adjustCursorPostion(po);
+        }else{
+          me._adjustMiddlePostion(po);          
         }
+
         x = me.rect.x;
         y = me.rect.y;
       }
@@ -277,35 +218,49 @@
 
     _adjustMiddlePostion: function(){
       var me = this;
-      var delta = 0;
       //container;
       var ctn = $(me.params.container);
       var ctnOffset = ctn.offset();
       var ctnPdT = parseFloat(ctn.css('padding-top'));   //container padding-top;
-      var ctnBdT = parseFloat(ctn.css('border-top-width'));   //container border-top;
+      var ctnPdR = parseFloat(ctn.css('padding-right'));   //container padding-right;
+      var ctnPdB = parseFloat(ctn.css('padding-bottom'));   //container padding-bottom;
       var ctnPdL = parseFloat(ctn.css('padding-left'));   //container padding-left;
+
+      var ctnBdT = parseFloat(ctn.css('border-top-width'));   //container border-top;
+      var ctnBdR = parseFloat(ctn.css('border-right-width'));   //container border-right;
+      var ctnBdB = parseFloat(ctn.css('border-bottom-width'));   //container border-bottom;
       var ctnBdL = parseFloat(ctn.css('border-left-width'));   //container border-left;
-      var ctnH0 = ctnPdT + delta;  //padding-left and border-left-width;
-      var ctnW0 = ctnPdL + delta;  //padding-top and border-top-width;
-      var ctnH = ctn.outerHeight() - ctnH0;
-      var ctnW = ctn.outerWidth() - ctnW0;
-      var ctnX = ctnOffset.left + delta;
-      var ctnY = ctnOffset.top + delta;
+
+      var ctnH0 = ctnBdT;
+      var ctnW0 = ctnBdL;
+
+      var ctnH = ctn.outerHeight() - ctnPdT - ctnPdB;
+      var ctnW = ctn.outerWidth() - ctnPdL - ctnPdR;
+      var ctnX = ctnOffset.left;
+      var ctnY = ctnOffset.top;
+
+      var ctnRECT = {x: 0, y: 0, w: ctnW, h: ctnH}
 
       //origin
       var origin = $(me.params.origin);
       var orgW = origin.outerWidth();
       var orgH = origin.outerHeight();
       var orgOffset = origin.offset();
+
+      //relative to container;      
       var orgX = orgOffset.left - ctnOffset.left - ctnBdL;
       var orgY = orgOffset.top - ctnOffset.top - ctnBdT;
 
       //Popup
       var rect = me.rect;
-      var x = rect.x;
-      var y = rect.y;
-      var w = rect.w;
-      var h = rect.h;
+      var popupWin = me.params.dom;
+      var x = 0;
+      var y = 0;
+      var h = 0;
+      var w = 0;
+      var pW = w = popupWin.outerWidth() + 2;
+      var pH = h = popupWin.outerHeight();
+      var delta = me.params.delta;
 
 
       //anchor;
@@ -346,33 +301,35 @@
           case 'TOPMIDDLE': //上侧是否超过父容器，赞不做处理；
             anchorX0 = w / 2;
             anchorY0 = h;
-            if(x < ctnW0){
-              x = ctnW0;
-              anchorX0 = orgOffset.left - ctnOffset.left - ctnW0 - ctnPdL+ orgW / 2;
+            x = orgX - (pW - orgW) / 2;
+            y = orgY - delta - pH;
+            if(x < ctnRECT.x){
+              x = ctnRECT.x;
+              anchorX0 = orgOffset.left - ctnOffset.left - ctnH0 + orgW / 2;
             }
             if(x + w > ctnW){
               x = ctnW - w;
-              anchorX0 = orgOffset.left - ctnOffset.left - x + orgW / 2;
+              anchorX0 = orgOffset.left - ctnOffset.left - ctnW0 - x + orgW / 2;
             }
             break;
           case 'BOTTOMMIDDLE'://下侧是否超过父容器，赞不做处理；
             anchorX0 = w / 2;
             anchorY0 = 0;
-            if(x < ctnW0){
-              x = ctnW0;
-              anchorX0 = orgOffset.left - ctnOffset.left - ctnW0 + orgW / 2;
+            x = orgX - (pW - orgW) / 2;
+            y = orgY + delta + orgH;
+
+            if(x < ctnRECT.x){
+              x = ctnRECT.x;
+              anchorX0 = orgOffset.left - ctnOffset.left - ctnH0 + orgW / 2;
             }
             if(x + w > ctnW){
               x = ctnW - w;
-              anchorX0 = orgOffset.left - ctnOffset.left - x + orgW / 2;
+              anchorX0 = orgOffset.left - ctnOffset.left - ctnW0 - x + orgW / 2;
             }
             break;
           default:
             ;
         }
-        //add padding-left and border-left-width;
-        rect.x = x;
-        rect.y = y;
       }else{
         switch(dir){
           case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
@@ -396,6 +353,11 @@
         }
       }
       me._beforeShow(me.params.dom, anchorX0, anchorY0);
+
+
+        //add padding-left and border-left-width;
+        rect.x = x;
+        rect.y = y;
     },
 
     _adjustCornerPost: function(){
