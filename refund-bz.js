@@ -5,9 +5,9 @@ $(function() {
         var data0 = origData.data[0];
         var allTipsObj = {};
         var actData;
+        initRefundLine(data0.refundInfoGroup);
         initProc(data0.refundBarInfos);
         initPopupOther(data0);
-        initRefundLine(data0.refundInfoGroup);
         initEvt();
         //adjustEdge();
     }else if (origData.errcode === 100244 || origData.errcode === 100247){// no refund info;
@@ -89,21 +89,15 @@ $(function() {
                 dir: 'bm',
                 container: '.proc_detail',
                 defEle: ':first',
-                delta: 8,
-                maxWidth: 370,
+                offset: 8,
+                maxWidth: 150,
                 getContent: function(org) {
                     var line2Str = ($.trim(tips2) !== '') ? '<div class="line2">' + tips2 + '</div>' : '';
                     $('#proc_info_hide').html('<div class="line1">' + tips1 + '</div>' + line2Str).show();
                     return $( '<div class="popup_head"><div class="lg_explain_arrow"><span class="bottom1"></span><span class="bottom2"></span></div><div><div class="line1">' + tips1 + '</div>' + line2Str + '</div></div>');
                 },
                 beforeShow: function(dom, x, y){
-                    if(this.curDir === "BOTTOMMIDDLE"){
-                        dom.find('.bottom1').hide();
-                        dom.find('.bottom2').hide();
-                    }else if(this.curDir === "TOPMIDDLE"){
-                        dom.find('.bottom1').css({'left': x-6+'px', 'top':y-1+'px'});
-                        dom.find('.bottom2').css({'left': x-7+'px', 'top':y-1+'px'});
-                    }
+                    console.log('x:     ' + x + '       y:      ' + y);
                 }
             });
         }
