@@ -68,6 +68,8 @@
             me.dirsOppoRectDic = {RIGHT: 'LEFT', LEFT: 'RIGHT', TOP: 'BOTTOM', BOTTOM: 'TOP' };
             me.dirsOppoMdlDic = { RIGHTMIDDLE: 'LEFTMIDDLE', LEFTMIDDLE: 'RIGHTMIDDLE', TOPMIDDLE: 'BOTTOMMIDDLE', BOTTOMMIDDLE: 'TOPMIDDLE' };
 
+            me._getZoomFactor();
+
             var ele = me.params.eles.filter(me.params.defEle);
             if(ele.length){
                 me.params.origin = ele;
@@ -111,7 +113,8 @@
             var _html = '<div style="position: absolute;left: 0;top: 0;width: auto;height: auto;display: none;;white-space:nowrap;word-wrap:break-word;*zoom:1;"></div>';
             var obj = $(_html);
             this.params.dom = obj;
-            $(this.params.container).css('position','relative').append(obj);
+            //ie6多个父级元素具有定位属性时，定位会失败，zoom:1;处理bug
+            $(this.params.container).css({'position': 'relative', zoom: 1}).append(obj);
         },
 
         //show popup window;
@@ -187,6 +190,8 @@
             //container;
             var ctn = $(me.params.container);
             var ctnOffset = ctn.offset();
+            ctnOffset.left = Math.round(ctnOffset.left / me.zoomFactor);
+            ctnOffset.top = Math.round(ctnOffset.top / me.zoomFactor);
             var ctnPdT = parseFloat(ctn.css('padding-top'));   //container padding-top;
             var ctnPdR = parseFloat(ctn.css('padding-right'));   //container padding-right;
             var ctnPdB = parseFloat(ctn.css('padding-bottom'));   //container padding-bottom;
@@ -212,6 +217,8 @@
             var orgW = origin.outerWidth();
             var orgH = origin.outerHeight();
             var orgOffset = origin.offset();
+            orgOffset.left = Math.round(orgOffset.left / me.zoomFactor);
+            orgOffset.top = Math.round(orgOffset.top / me.zoomFactor);
 
             //relative to container;      
             var orgX = orgOffset.left - ctnOffset.left - ctnBdL;
@@ -327,6 +334,19 @@
         },
 
         _adjustCursorPostion: function(){
+        },
+
+        _getZoomFactor: function() {
+            var factor = 1;
+            if($.browser && $.browser.msie === true && $.browser.version === '7.0'){
+                if (document.body.getBoundingClientRect) {
+                    var rect = document.body.getBoundingClientRect();
+                    var physicalW = rect.right - rect.left;
+                    var logicalW = document.body.offsetWidth;
+                    factor = Math.round((physicalW / logicalW) * 100) / 100;
+                }
+            }
+            this.zoomFactor = factor;
         },
 
         _beforeShow: function(){
