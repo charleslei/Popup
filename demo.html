@@ -28,13 +28,14 @@
         <a href='javascript:;' id='clickme' style='display:block;white-space:nowrap;'>click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!</a>
     </div>
     <script type="text/javascript" src="./jquery-2.1.0.min.js"></script>
-    <script src="./refund-popup.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./popup.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
 
     $(function(){
-        $('#todopup1').PopUp({evt: 'click', dir: 'tm', container: '.content', offset: 10, 
+        $('#todopup1').PopUp({evt: 'click', dir: 'r', container: '.content', defEle: ':first', offset: 10, 
             beforeShow: function(dom, x, y){
                 dom.append($('<div style="background-color:red;width:10px;height:10px;position:absolute;left:' + (x-5) + 'px;top:' + (y-10) + 'px"></div>'));
+                console.log('x:    ' + x + '    y:    ' + y);
             },
             getContent: function(){
                 //return $("<a href='javascript:;' id='clickme' style='background-color:grey;display:block;white-space:nowrap;'>click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!</a>");
