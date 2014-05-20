@@ -193,11 +193,12 @@
             var ctnOffset = ctn.offset();
             ctnOffset.left = Math.round(ctnOffset.left / me.zoomFactor);
             ctnOffset.top = Math.round(ctnOffset.top / me.zoomFactor);
+            /*
             var ctnPdT = parseFloat(ctn.css('padding-top'));   //container padding-top;
             var ctnPdR = parseFloat(ctn.css('padding-right'));   //container padding-right;
             var ctnPdB = parseFloat(ctn.css('padding-bottom'));   //container padding-bottom;
             var ctnPdL = parseFloat(ctn.css('padding-left'));   //container padding-left;
-
+            */
             var ctnBdT = parseFloat(ctn.css('border-top-width'));   //container border-top;
             var ctnBdR = parseFloat(ctn.css('border-right-width'));   //container border-right;
             var ctnBdB = parseFloat(ctn.css('border-bottom-width'));   //container border-bottom;
