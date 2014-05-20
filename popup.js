@@ -170,7 +170,7 @@
                 if(po === POS[3]) {
                     me._adjustCursorPostion(po);
                 }else{
-                    me._adjustMiddlePostion(po);
+                    me._adjustRectPostion(po);
                 }
 
                 x = me.rect.x;
@@ -186,7 +186,7 @@
             }
         },
 
-        _adjustMiddlePostion: function(){
+        _adjustRectPostion: function(){
             var me = this;
             //container;
             var ctn = $(me.params.container);
@@ -247,7 +247,6 @@
             var deltaX = w - orgW >= 0 ? true : false;
             var deltaY = h - orgH >= 0 ? true : false;
 
-            
             switch(dir){
                 case 'LEFTMIDDLE'://左侧是否超过父容器，赞不做处理；
                     anchorX0 = w;
@@ -259,11 +258,11 @@
                     if (w <= ctnRECT.w && h <= ctnRECT.h){//高宽超过文档范围的暂时不做处理；
                         if(y < ctnRECT.y){
                             y = ctnRECT.y;
-                            anchorY0 = orgOffset.top - ctnOffset.top - ctnH0 + orgH / 2
+                            anchorY0 = orgOffset.top - ctnOffset.top - ctnH0 + orgH / 2;
                         }
                         if(y + h > ctnRECT.h){
                             y = ctnRECT.h - h;
-                            anchorY0 = orgOffset.top - ctnOffset.top - ctnH0 - y + orgH / 2
+                            anchorY0 = orgOffset.top - ctnOffset.top - ctnH0 - y + orgH / 2;
                         }
                     }
                     break;
@@ -277,11 +276,11 @@
                     if (w <= ctnRECT.w && h <= ctnRECT.h){//高宽超过文档范围的暂时不做处理；
                         if(y < ctnRECT.y){
                             y = ctnRECT.y;
-                            anchorY0 = orgOffset.top - ctnOffset.top - ctnH0 + orgH / 2
+                            anchorY0 = orgOffset.top - ctnOffset.top - ctnH0 + orgH / 2;
                         }
                         if(y + h > ctnRECT.h){
                             y = ctnRECT.h - h;
-                            anchorY0 = orgOffset.top - ctnOffset.top - ctnH0 - y + orgH / 2
+                            anchorY0 = orgOffset.top - ctnOffset.top - ctnH0 - y + orgH / 2;
                         }
                     }
                     break;
@@ -403,13 +402,11 @@
             rect.y = y;
         },
 
-        _adjustCornerPost: function(){
-        },
-
-        _adjustRECTPostion: function() {
-        },
-
         _adjustCursorPostion: function(){
+            var me = this;
+            var x0 = me.rect.x;
+            var y0 = me.rect.y;
+            me._beforeShow(me.params.dom, x0, y0);
         },
 
         _oppoDirect: function() {  //RECT
