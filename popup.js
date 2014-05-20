@@ -44,7 +44,7 @@
             showAll: false,
             maxWidth: 0,
             autoAdjustDir: false,
-            delta: 2  //
+            delta: 0  //
         };
 
         $.extend(prms, config);
@@ -70,6 +70,7 @@
             me.dirsOppoMdlDic = { RIGHTMIDDLE: 'LEFTMIDDLE', LEFTMIDDLE: 'RIGHTMIDDLE', TOPMIDDLE: 'BOTTOMMIDDLE', BOTTOMMIDDLE: 'TOPMIDDLE' };
 
             me._getZoomFactor();
+            me.adjustStat = true;
 
             var ele = me.params.eles.filter(me.params.defEle);
             if(ele.length){
@@ -152,7 +153,6 @@
             var me = this;
 
             var cp = me.params.cursorPosition || {};
-            var adjustSuccess = true;
 
             var POS = me.POSTYPE;
             var po = '';
@@ -166,7 +166,7 @@
                 po = POS[3];
             }
 
-            if (adjustSuccess) {
+            if (me.adjustStat) {
                 if(po === POS[3]) {
                     me._adjustCursorPostion(po);
                 }else{
@@ -193,12 +193,7 @@
             var ctnOffset = ctn.offset();
             ctnOffset.left = Math.round(ctnOffset.left / me.zoomFactor);
             ctnOffset.top = Math.round(ctnOffset.top / me.zoomFactor);
-            /*
-            var ctnPdT = parseFloat(ctn.css('padding-top'));   //container padding-top;
-            var ctnPdR = parseFloat(ctn.css('padding-right'));   //container padding-right;
-            var ctnPdB = parseFloat(ctn.css('padding-bottom'));   //container padding-bottom;
-            var ctnPdL = parseFloat(ctn.css('padding-left'));   //container padding-left;
-            */
+
             var ctnBdT = parseFloat(ctn.css('border-top-width'));   //container border-top;
             var ctnBdR = parseFloat(ctn.css('border-right-width'));   //container border-right;
             var ctnBdB = parseFloat(ctn.css('border-bottom-width'));   //container border-bottom;
@@ -228,7 +223,6 @@
 
             //Popup
             var delta = me.params.delta;
-            var rect = me.rect;
             var popupWin = me.params.dom;
             var x = 0;
             var y = 0;
@@ -239,8 +233,6 @@
             //anchor;
             var anchorX0;
             var anchorY0;
-
-            var anchorP = {};
 
             var dir = me.curDir;
 
@@ -257,6 +249,10 @@
                     y = orgY - (h - orgH) / 2;
 
                     if (w <= ctnRECT.w && h <= ctnRECT.h){//高宽超过文档范围的暂时不做处理；
+                        if(me.params.autoAdjustDir && me.tempMdlDir.length > 1 && x < ctnRECT.x){
+                            me._getPositionExec(me._oppoDirect());
+                            return;
+                        }
                         if(y < ctnRECT.y){
                             y = ctnRECT.y;
                             anchorY0 = orgOffset.top - ctnOffset.top - ctnH0 + orgH / 2;
@@ -275,6 +271,10 @@
                     y = orgY + (orgH - h) / 2;
 
                     if (w <= ctnRECT.w && h <= ctnRECT.h){//高宽超过文档范围的暂时不做处理；
+                        if(me.params.autoAdjustDir && me.tempMdlDir.length > 1 && x + w > ctnRECT.w){
+                            me._getPositionExec(me._oppoDirect());
+                            return;//递归时会引起回调函数参数错误；
+                        }
                         if(y < ctnRECT.y){
                             y = ctnRECT.y;
                             anchorY0 = orgOffset.top - ctnOffset.top - ctnH0 + orgH / 2;
@@ -293,6 +293,10 @@
                     y = orgY - offset - h;
 
                     if (w <= ctnRECT.w && h <= ctnRECT.h){//高宽超过文档范围的暂时不做处理；
+                        if(me.params.autoAdjustDir && me.tempMdlDir.length > 1 && y < ctnRECT.y){
+                            me._getPositionExec(me._oppoDirect());
+                            return;
+                        }
                         if(x < ctnRECT.x){
                             x = ctnRECT.x;
                             anchorX0 = orgOffset.left - ctnOffset.left - ctnW0 + orgW / 2;
@@ -311,6 +315,10 @@
                     y = orgY + offset + orgH;
 
                     if (w <= ctnRECT.w && h <= ctnRECT.h){//高宽超过文档范围的暂时不做处理；
+                        if(me.params.autoAdjustDir && me.tempMdlDir.length > 1 && y + h > ctnRECT.h){
+                            me._getPositionExec(me._oppoDirect());
+                            return;
+                        }
                         if(x < ctnRECT.x){
                             x = ctnRECT.x;
                             anchorX0 = orgOffset.left - ctnOffset.left - ctnW0 + orgW / 2;
@@ -329,14 +337,16 @@
                     x = orgX - w - offset;
                     y = orgY;
 
-                    if(y + h > ctnRECT.h){
-                        rect.y = ctnRECT.h - h;
-                        anchorY0 = deltaY ? orgOffset.top - ctnOffset.top - ctnH0 - y + orgH / 2 : h / 2;
-                    }
-                    //左侧超限，dir为right
-                    if(me.params.autoAdjustDir && x < ctnRECT.x){
-                        me._getPositionExec(me._oppoDirect());
-                        return;
+                    if (w <= ctnRECT.w && h <= ctnRECT.h){//高宽超过文档范围的暂时不做处理；
+                        //左侧超限，dir为right
+                        if(me.params.autoAdjustDir && me.tempRectDir.length > 1 && x < ctnRECT.x){
+                            me._getPositionExec(me._oppoDirect());
+                            return;
+                        }
+                        if(y + h > ctnRECT.h){
+                            y = ctnRECT.h - h;
+                            anchorY0 = deltaY ? orgOffset.top - ctnOffset.top - ctnH0 - y + orgH / 2 : h / 2;
+                        }
                     }
                     break;
                 case 'RIGHT':
@@ -347,14 +357,16 @@
                     x = orgX + orgW + offset;
                     y = orgY;
 
-                    if(y + h > ctnRECT.h){
-                        rect.y = ctnRECT.h - h;
-                        anchorY0 = deltaY ? orgOffset.top - ctnOffset.top - ctnH0 - y + orgH / 2 : h / 2;
-                    }
-                    //右侧超限，dir为left
-                    if(me.params.autoAdjustDir && x + w > ctnRECT.w){
-                        me._getPositionExec(me._oppoDirect());
-                        return;//递归时会引起回调函数参数错误；
+                    if (w <= ctnRECT.w && h <= ctnRECT.h){//高宽超过文档范围的暂时不做处理；
+                        //右侧超限，dir为left
+                        if(me.params.autoAdjustDir && me.tempRectDir.length > 1 && x + w > ctnRECT.w){
+                            me._getPositionExec(me._oppoDirect());
+                            return;//递归时会引起回调函数参数错误；
+                        }
+                        if(y + h > ctnRECT.h){
+                            y = ctnRECT.h - h;
+                            anchorY0 = deltaY ? orgOffset.top - ctnOffset.top - ctnH0 - y + orgH / 2 : h / 2;
+                        }
                     }
                     break;
                 case 'TOP':
@@ -365,14 +377,16 @@
                     x = orgX;
                     y = orgY - h - offset;
 
-                    if(x + w > ctnRECT.w){
-                        rect.x = ctnRECT.w - w;
-                        anchorX0 = deltaX ? orgOffset.left - ctnOffset.left - ctnW0 - x + orgW / 2 : w / 2;
-                    }
-                    //上部超限，dir为bottom
-                    if(me.params.autoAdjustDir && y < ctnRECT.y){
-                        me._getPositionExec(me._oppoDirect());
-                        return;
+                    if (w <= ctnRECT.w && h <= ctnRECT.h){//高宽超过文档范围的暂时不做处理；
+                        //上部超限，dir为bottom
+                        if(me.params.autoAdjustDir && me.tempRectDir.length > 1 && y < ctnRECT.y){
+                            me._getPositionExec(me._oppoDirect());
+                            return;
+                        }
+                        if(x + w > ctnRECT.w){
+                            x = ctnRECT.w - w;
+                            anchorX0 = deltaX ? orgOffset.left - ctnOffset.left - ctnW0 - x + orgW / 2 : w / 2;
+                        }
                     }
                     break;
                 case 'BOTTOM':
@@ -382,15 +396,17 @@
                     x = orgX;
                     y = orgY + orgH + offset;
 
-                    //右侧超限，向左移；左侧最小值为0；
-                    if(x + w > ctnRECT.w){
-                        rect.x = ctnRECT.w - w;
-                        anchorX0 = deltaX ? orgOffset.left - ctnOffset.left - ctnW0 - x + orgW / 2 : w / 2;
-                    }
-                    //下部超限，dir为top
-                    if(me.params.autoAdjustDir && y + h > ctnRECT.h){
-                        me._getPositionExec(me._oppoDirect());
-                        return;
+                    if (w <= ctnRECT.w && h <= ctnRECT.h){//高宽超过文档范围的暂时不做处理；
+                        //下部超限，dir为top
+                        if(me.params.autoAdjustDir && me.tempRectDir.length > 1 && y + h > ctnRECT.h){
+                            me._getPositionExec(me._oppoDirect());
+                            return;
+                        }
+                        //右侧超限，向左移；左侧最小值为0；
+                        if(x + w > ctnRECT.w){
+                            x = ctnRECT.w - w;
+                            anchorX0 = deltaX ? orgOffset.left - ctnOffset.left - ctnW0 - x + orgW / 2 : w / 2;
+                        }
                     }
                     break;
                 default:
@@ -399,8 +415,8 @@
             me._beforeShow(me.params.dom, anchorX0, anchorY0);
 
 
-            rect.x = x;
-            rect.y = y;
+            me.rect.x = x;
+            me.rect.y = y;
         },
 
         _adjustCursorPostion: function(){
@@ -421,13 +437,13 @@
                 dirsOpppDic = me.dirsOppoMdlDic;
             }
 
-            if (tempDir && tempDir.length > 0) {
+            if (tempDir && tempDir.length > 1) {
                 tempDir.splice(tempDir.indexOf(dir), 1);
                 var next = dirsOpppDic[dir];
                 var idx = tempDir.indexOf(next);
                 return idx >= 0 ? next : tempDir[0];
             } else {
-                me.tempRectDir = [].concat(me.RECTDIRS);  //TODO:rectdirs and mdldirs;
+                me.adjustStat = false;
                 return me.POSITIONS[me.params.dir]; //return origin dir
             }
         },
