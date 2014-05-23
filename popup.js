@@ -16,20 +16,16 @@
 
     function pp(config) {
         this.POSITIONS = {
-            lt: 'LEFTTOP',
-            rt: 'RIGHTTOP',
-            rb: 'RIGHTBOTTOM',
-            lb: 'LEFTBOTTOM',
             l: 'LEFT',//弹框右上角与触发元素左上角重合
             t: 'TOP',//弹窗左下角与触发元素左上角重合；
             r: 'RIGHT',//弹窗左上角与触发元素右上角重合；
             b: 'BOTTOM',//与默认设置相同；
-            tm: 'TOPMIDDLE',
-            rm: 'RIGHTMIDDLE',
-            bm: 'BOTTOMMIDDLE',
-            lm: 'LEFTMIDDLE',
-            cur: 'CURSOR'
-        }; //左上，右上，右下，左下
+            tm: 'TOPMIDDLE',//弹窗在触发元素上部，两者居中对齐；
+            rm: 'RIGHTMIDDLE',//弹窗在触发元素右侧，两者居中对齐；
+            bm: 'BOTTOMMIDDLE',//弹窗在触发元素下部，两者居中对齐；
+            lm: 'LEFTMIDDLE',//弹窗在触发元素左侧，两者居中对齐；
+            cur: 'CURSOR'//弹窗在鼠标右下侧；
+        };
         this.defautlDir = 'b';
 
         var prms = {
@@ -39,12 +35,12 @@
             container: 'body',  //悬浮框的边界，默认为document文档的body内；
             beforeShow: function() {},//trigger before popup window showen；
             getContent: function(){}, //get popup window content；
-            offset: 0,
-            defEle: '', //默认显示弹窗的元素；只在未设置鼠标交互事件时启用；
-            showAll: false,
-            maxWidth: 0,
-            autoAdjustDir: false,
-            delta: 0  //
+            offset: 0,  //弹窗与触发元素之间的偏移距离，默认为0；
+            defEle: '', //默认显示弹窗的元素，可以使用jquery选择权设置；例如：':eq(1)' ， ':first'；
+            showAll: false,  //是否在所有的触发元素上同时显示弹窗；
+            maxWidth: 0,  //弹窗的最大宽度；默认为0，表示无限制；此时宽度由用户弹窗内容决定；
+            autoAdjustDir: false,  //是否要自适应方向；
+            delta: 0  //  此属性不好用；
         };
 
         $.extend(prms, config);
@@ -68,6 +64,8 @@
 
             me.dirsOppoRectDic = {RIGHT: 'LEFT', LEFT: 'RIGHT', TOP: 'BOTTOM', BOTTOM: 'TOP' };
             me.dirsOppoMdlDic = { RIGHTMIDDLE: 'LEFTMIDDLE', LEFTMIDDLE: 'RIGHTMIDDLE', TOPMIDDLE: 'BOTTOMMIDDLE', BOTTOMMIDDLE: 'TOPMIDDLE' };
+
+            me.EVTLIST = ['click', 'hover'];
 
             me._getZoomFactor();
             me.adjustStat = true;
@@ -414,7 +412,6 @@
             }
             me._beforeShow(me.params.dom, anchorX0, anchorY0);
 
-
             me.rect.x = x;
             me.rect.y = y;
         },
@@ -426,6 +423,7 @@
             me._beforeShow(me.params.dom, x0, y0);
         },
 
+        //获取当前方向的下一个可用方向；
         _oppoDirect: function() {  //RECT
             var me = this, tempDir, dirsOpppDic, dir = me.curDir;
 
@@ -448,6 +446,7 @@
             }
         },
 
+        //获取IE7的缩放比例；
         _getZoomFactor: function() {
             var factor = 1;
             if($.browser && $.browser.msie === true && $.browser.version === '7.0'){
