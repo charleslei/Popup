@@ -476,7 +476,7 @@
         _initFunc: function(){
             if(!Array.prototype.indexOf){
                 Array.prototype.indexOf = function(){
-                    var me = this, ori = Arguments[0];
+                    var me = this, ori = arguments[0];
                     if(!!ori){
                         for(var i=0,len=me.length;i<len;i++){
                             if(ori === me[i]){
