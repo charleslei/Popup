@@ -40,7 +40,7 @@
             showAll: false,  //是否在所有的触发元素上同时显示弹窗；
             maxWidth: 0,  //弹窗的最大宽度；默认为0，表示无限制；此时宽度由用户弹窗内容决定；
             autoAdjustDir: false,  //是否要自适应方向；
-            delta: 0  //  此属性不好用；
+            delta: 2  //  此属性可用；
         };
 
         $.extend(prms, config);
@@ -127,6 +127,7 @@
             var pts = me.POSITIONS, dir = me.params.dir;
             me.params.dom.empty().append(me._getContent());//这里会清空getContent返回的内容，所以返回的内容应该动态生成；
 
+            me.params.dom.css('width', 'auto');
             //enable max-width for dom;
             (me.params.maxWidth !== 0 && me.params.dom.outerWidth() > me.params.maxWidth) && me.params.dom.css('width', me.params.maxWidth);
 
@@ -139,6 +140,7 @@
                 //IE6 / 7 兼容，在这两个版本的浏览器上回自动折行；
                 me.params.dom.css('width', parseInt(me.params.dom.width()) + me.params.delta + 'px');
                 me.params.dom.css({'left': po.x, 'top': po.y}).show();
+
             }
         },
 
