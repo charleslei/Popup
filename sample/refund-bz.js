@@ -86,7 +86,7 @@ $(function() {
 
             $('.active .flag, .active1 .flag').PopUp({
                 evt: 'click',
-                dir: 'bm',
+                dir: 'tm',
                 container: '.proc_detail',
                 defEle: ':first',
                 offset: 8,
@@ -105,11 +105,11 @@ $(function() {
         function allTipsFunc(){
             //退款状态
             $('#refund_stat').html(allTipsObj[0]).show();
-            $('.flag').PopUp({evt: 'click', dir: 'bm',container: '.graph_wrapper',defEle: ':first', showAll: true, delta: 18,getContent: function(org) {return $(allTipsObj[org.attr('step')]);}});
+            $('.flag').PopUp({evt: 'click', dir: 'bm',container: '.graph_wrapper',defEle: ':eq(1)',offset: 18,getContent: function(org) {return $(allTipsObj[org.attr('step')]);}});
         }
 
         activeFunc();
-        //allTipsFunc();
+        allTipsFunc();
     }
 
     function initRefundLine(data){
