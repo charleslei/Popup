@@ -35,7 +35,7 @@
         $('#todopup1').PopUp({evt: 'click', dir: 'bm', container: '.content', defEle: ':first', offset: 10, autoAdjustDir: true,
             beforeShow: function(dom, x, y){
                 dom.append($('<div style="background-color:red;width:10px;height:10px;position:absolute;left:' + (x-5) + 'px;top:' + (y-10) + 'px"></div>'));
-                console.log('x:    ' + x + '    y:    ' + y);
+                //console.log('x:    ' + x + '    y:    ' + y);
             },
             getContent: function(){
                 //return $("<a href='javascript:;' id='clickme' style='background-color:grey;display:block;white-space:nowrap;'>click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!</a>");

@@ -47,6 +47,8 @@
         //get ride of unexpected dir value;
         (!this.POSITIONS[prms.dir]) && (prms.dir = this.defautlDir);
         this.params = prms;
+
+        this._initFunc();
         this._init();
     }
 
@@ -469,7 +471,25 @@
             var me = this, origin = me.params.origin;
             var con = me.params.getContent.apply(me, [origin]);
             return con || '';
+        },
+
+        _initFunc: function(){
+            if(!Array.prototype.indexOf){
+                Array.prototype.indexOf = function(){
+                    var me = this, ori = Arguments[0];
+                    if(!!ori){
+                        for(var i=0,len=me.length;i<len;i++){
+                            if(ori === me[i]){
+                                return i;
+                            }else{
+                                return -1;
+                            }
+                        }
+                    }
+                }
+            }
         }
+
     };
 
     $.fn.PopUp = popup;
