@@ -23,12 +23,12 @@
             var cfg = {};
             $.each(eles, function(k, v){
                 $.extend(cfg, config, {eles: $(v) });
-                new pp(cfg);
+                $(v).data('POPUP', new pp(cfg));
             })
         } else {
             var cfg = {};
             $.extend(cfg, config, {eles: eles });
-            new pp(cfg);
+            eles.data('POPUP', new pp(cfg));
         }
     }
 
@@ -129,11 +129,16 @@
         },
 
         _drawHTML: function() {
-            var _html = '<div style="position: absolute;left: 0;top: 0;width: auto;height: auto;display: none;;white-space:nowrap;word-wrap:break-word;*zoom:1;"></div>';
+            var _html = '<div style="position: absolute;left: 0;top: 0;width: auto;height: auto;display: none;;white-space:nowrap;word-wrap:break-word;*zoom:1;z-index:9999"></div>';
             var obj = $(_html);
             this.params.dom = obj;
             //ie6多个父级元素具有定位属性时，定位会失败，zoom:1;处理bug
-            $(this.params.container).css({'position': 'relative', zoom: 1}).append(obj);
+            //若父级有定位,则不再进行定位;
+            var pos = $(this.params.container).css('position');
+            if(!(pos === 'absolute' || pos === 'relative' || pos === 'fixed')){
+                $(this.params.container).css({'position': 'relative'});
+            }
+            $(this.params.container).css({zoom: 1}).append(obj);
         },
 
         //show popup window;
@@ -491,6 +496,14 @@
             var me = this, origin = me.params.origin;
             var con = me.params.getContent.apply(me, [origin]);
             return con || '';
+        },
+
+        hide: function (argument) {
+            this._hideWin();
+        },
+
+        show: function (argument) {
+            this._showWin();
         }
     };
 

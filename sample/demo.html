@@ -32,7 +32,7 @@
     <script type="text/javascript">
 
     $(function(){
-        /*
+        
         $('#todopup1').PopUp({evt: 'click', dir: 'bm', container: '.content', defEle: ':first', offset: 10, autoAdjustDir: true,
             beforeShow: function(dom, x, y){
                 dom.append($('<div style="background-color:red;width:10px;height:10px;position:absolute;left:' + (x-5) + 'px;top:' + (y-10) + 'px"></div>'));
@@ -42,10 +42,10 @@
                 //return $("<a href='javascript:;' id='clickme' style='background-color:grey;display:block;white-space:nowrap;'>click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!click me!!!!!!!!!!!!!!!!!!!!!!!!!!!!</a>");
                 return $("<div style='height:90px;width:800px;background-color:#99f'>打法打法斯蒂芬阿斯顿发送打法发送打法</div>");
             }
-        });*/
-            $('a').PopUp({evt: 'click', defEle: ':eq(1)', dir: 'l', container: '.content', getContent: function(obj){
-                return $('<div style="background:green;white-space:nowrap;">' + obj.data('text') + '</div>');
-                }});
+        });
+            // $('a').PopUp({evt: 'click', defEle: ':eq(1)', dir: 'l', container: '.content', getContent: function(obj){
+            //     return $('<div style="background:green;white-space:nowrap;">' + obj.data('text') + '</div>');
+            //     }});
         
         /*$('#todopup').PopUp({dir: 'bm', container: '.content', beforeShow: function(dom, x, y){
             dom.empty().append($('<div style="background-color:red;width:10px;height:10px;position:absolute;left:' + x + 'px;top:' + (y-10) + 'px"></div>'));
