@@ -1,15 +1,33 @@
 (function($, win, doc) {
+
+    !function(){
+        if(!Array.prototype.indexOf){
+            Array.prototype.indexOf = function(){
+                var me = this, ori = arguments[0];
+                if(!!ori){
+                    for(var i=0,len=me.length;i<len;i++){
+                        if(ori === me[i]){
+                            return i;
+                        }else{
+                            return -1;
+                        }
+                    }
+                }
+            }
+        }
+    }();
+
     function popup(config) {
-        var $this = $(this);
+        var eles = $(this);
         if (config.showAll) {
             var cfg = {};
-            $.each($this, function(k, v){
+            $.each(eles, function(k, v){
                 $.extend(cfg, config, {eles: $(v) });
                 new pp(cfg);
             })
         } else {
             var cfg = {};
-            $.extend(cfg, config, {eles: $this });
+            $.extend(cfg, config, {eles: eles });
             new pp(cfg);
         }
     }
@@ -48,7 +66,6 @@
         (!this.POSITIONS[prms.dir]) && (prms.dir = this.defautlDir);
         this.params = prms;
 
-        this._initFunc();
         this._init();
     }
 
@@ -103,7 +120,7 @@
             }
 
             //注册浏览器缩放事件
-            $(window).bind('resize.popup ', function(e){
+            $(window).bind('resize.popup', function(e){
                 if(me.params.origin && me.params.origin.length){
                     //me._showWin();
                 }
@@ -450,6 +467,7 @@
             }
         },
 
+        //支持缩放;
         //获取IE7的缩放比例；
         _getZoomFactor: function() {
             var factor = 1;
@@ -473,25 +491,7 @@
             var me = this, origin = me.params.origin;
             var con = me.params.getContent.apply(me, [origin]);
             return con || '';
-        },
-
-        _initFunc: function(){
-            if(!Array.prototype.indexOf){
-                Array.prototype.indexOf = function(){
-                    var me = this, ori = arguments[0];
-                    if(!!ori){
-                        for(var i=0,len=me.length;i<len;i++){
-                            if(ori === me[i]){
-                                return i;
-                            }else{
-                                return -1;
-                            }
-                        }
-                    }
-                }
-            }
         }
-
     };
 
     $.fn.PopUp = popup;
